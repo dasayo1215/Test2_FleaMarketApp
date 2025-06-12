@@ -122,7 +122,7 @@ README
 
 ```env
 APP_ENV=test
-APP_KEY=base64:O0wM3KWCwLI3VOhPFLhWHSpd1ygmfUcbOLIzjlngUCs=
+APP_KEY=
 APP_DEBUG=true
 
 DB_CONNECTION=mysql_test
