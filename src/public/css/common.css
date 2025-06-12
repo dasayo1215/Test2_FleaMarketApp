@@ -1,0 +1,222 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap");
+
+html,
+body {
+    font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+    letter-spacing: 0.03em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.header {
+    margin: 0 auto;
+    height: 50px;
+    background: #000;
+    display: flex;
+    justify-content: center;
+}
+
+.header-wrapper {
+    width: 100%;
+    max-width: 1540px;
+    height: 100%;
+    display: grid;
+    align-items: center;
+    text-align: center;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.header-logo {
+    grid-column: 1;
+    height: 50%;
+    display: flex;
+    align-items: center;
+}
+
+.header-logo-img {
+    display: block;
+    padding-left: 10px;
+    height: 30px;
+
+    @media screen and (max-width: 999px) {
+        height: 23px;
+    }
+}
+
+.header-nav {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    grid-column: 2/4;
+    height: 70%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-nav-item-search,
+.header-nav-item,
+.header-nav-search-form,
+.header-nav-auth-form {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    gap: 8px; /* .header-nav-search-form用 */
+}
+
+.header-nav-item-search {
+    width: 50%;
+    margin: 0 10px;
+}
+
+.header-nav-item {
+    width: calc(50% / 3);
+}
+
+.header-nav-search-input,
+.header-nav-search-btn {
+    box-sizing: border-box;
+}
+
+.header-nav-search-input {
+    border: none;
+    height: 80%;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 3px;
+    padding-left: 10px;
+}
+
+.header-nav-search-input::placeholder {
+    font-size: 14px;
+    color: black;
+    font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+}
+
+.header-nav-auth-btn,
+.header-nav-mypage {
+    all: unset;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+}
+
+.header-nav-search-btn,
+.header-nav-sale {
+    all: unset;
+    cursor: pointer;
+    text-decoration: none;
+    background-color: white;
+    color: black;
+    height: 80%;
+    width: 80%;
+    max-width: 60px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* content */
+.content-wrapper {
+    margin: 0 auto;
+    width: 70%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.content-wrapper2 {
+    margin: 0 auto;
+    width: 90%;
+    max-width: 1540px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.content-heading {
+    text-align: center;
+    margin: 50px auto;
+}
+
+.content-form-form {
+    width: 100%;
+}
+
+.content-form-label {
+    font-weight: bold;
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.content-form-input {
+    border: solid 1px rgb(109, 109, 109);
+    border-radius: 3px;
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 5px 10px;
+}
+
+.content-form-btn {
+    font-family: inherit;
+    border: none;
+    background-color: rgb(255, 85, 85);
+    border-radius: 3px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    width: 100%;
+    height: 40px;
+    margin: 30px 0;
+    cursor: pointer;
+}
+
+.content-btn {
+    text-decoration: none;
+    color: rgb(0, 115, 204);
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    border: none;
+    background-color: transparent;
+}
+
+.content-form-error-message {
+    color: rgb(255, 85, 85);
+    margin-bottom: 20px;
+    margin-top: 0;
+}
+
+.form-control {
+    font-family: "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    font-size: inherit;
+    color: inherit;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}

@@ -1,0 +1,105 @@
+
+.content-wrapper3 {
+    margin: 0 auto;
+	width: 90%;
+	max-width: 1540px;
+    margin-top: 40px;
+    display: flex;
+    gap: 5%;
+    justify-content: center;
+}
+
+.wrapper-1 {
+    width: 60%;
+}
+
+.wrapper-2 {
+    width: 30%;
+    min-width: 250px;
+    max-width: 350px;
+}
+
+.wrapper-1-1 {
+    display: flex;
+}
+
+.image-square {
+    margin-top: 50px;
+    width: 150px;
+    height: 150px;
+    background-color: rgb(217, 217, 217);
+}
+
+.item-detail {
+    margin-left: 30px;
+}
+
+.content-heading {
+	text-align: left;
+    margin-top: 50px;
+    margin-bottom: 10px;
+}
+
+.price {
+    font-size: 16px;
+}
+
+.price-num {
+    font-size: 24px;
+}
+
+.purchase-way {
+    padding-top: 20px;
+    margin: 20px 0 30px 0;
+    border-top: solid 1px rgb(95, 95, 95);
+}
+
+.content-form-select,
+.payment-method-error {
+    margin-left: 50px;
+    width: 60%;
+}
+
+.item-title-wrapper {
+    display: flex;
+    justify-content: space-between; /* 左右に配置 */
+    align-items: center;
+    margin-top: 30px;
+    border-top: solid 1px rgb(95, 95, 95);
+
+}
+
+.change-address {
+    font-size: 18px;
+}
+
+.postal-code,
+.address,
+.address-group-error {
+    padding-left: 50px;
+}
+
+.address-group-error {
+    padding-bottom: 30px;
+    border-bottom: solid 1px rgb(95, 95, 95);
+}
+
+.purchase-table {
+    margin-top: 50px;
+    border-collapse: collapse;
+    border: 1px solid #000;
+    width: 100%;
+}
+
+.purchase-table-th,
+.purchase-table-td {
+    padding: 10px;
+    text-align: center;
+    height: 60px;
+    font-weight: normal;
+}
+
+.purchase-table-th:last-of-type,
+.purchase-table-td:last-of-type {
+    border-top: 1px solid #000;
+}
