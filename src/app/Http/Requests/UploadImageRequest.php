@@ -24,12 +24,13 @@ class UploadImageRequest extends FormRequest
     public function rules()
     {
         return [
-            'image' => ['image', 'mimes:jpeg,png'],
+            'image' => ['required', 'image', 'mimes:jpeg,png'],
         ];
     }
 
     public function messages() {
         return [
+            'image.required' => '商品画像を選択してください',
             'image.image' => '拡張子が.jpegもしくは.pngの商品画像を選択してください',
             'image.mimes' => '拡張子が.jpegもしくは.pngの商品画像を選択してください',
         ];

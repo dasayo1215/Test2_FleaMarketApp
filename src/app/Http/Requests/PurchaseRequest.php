@@ -24,10 +24,10 @@ class PurchaseRequest extends FormRequest
     public function rules()
     {
         return [
-            'payment_method' => ['required'],
-            'postal_code' => ['required'],
-            'address' => ['required'],
-            'building' => ['required'],
+            'payment_method' => ['required', 'integer'],
+            'postal_code' => ['required', 'string', 'max:255'],
+            'address' => ['required', 'string', 'max:255'],
+            'building' => ['required', 'string', 'max:255'],
         ];
     }
 
