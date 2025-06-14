@@ -1,4 +1,4 @@
-.content-wrapper3 {
+.content-wrapper-small {
     margin: 50px auto 0;
     display: flex;
     flex-wrap: wrap;
@@ -25,7 +25,7 @@
     color: rgb(95, 95, 95);
 }
 
-.active {
+.page-active {
     color: rgb(255,85,85);
 }
 

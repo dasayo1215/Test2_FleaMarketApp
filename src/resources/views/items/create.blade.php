@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/items/create.css') }}">
+    <link rel="stylesheet" href="/css/items/create.css">
 @endsection
 
 @section('content')
@@ -22,7 +22,7 @@
                 <input class="image-input-hidden" type="file" id="imageInput" name="image">
             </form>
         </div>
-        <p class="content-form-error-message image-error">
+        <p class="form-error image-error">
             @foreach (['image', 'sell_uploaded_image_path'] as $field)
                 @error($field)
                     {{ $message }}
@@ -30,7 +30,7 @@
             @endforeach
         </p>
 
-        <form class="content-form-form" action="/sell" method="post">
+        <form class="content-form-wrapper" action="/sell" method="post">
             @csrf
             <h3 class="item-title">商品の詳細</h3>
             <label class="content-form-label">カテゴリー</label>
@@ -43,7 +43,7 @@
                     </label>
                 @endforeach
             </div>
-            <p class="content-form-error-message">
+            <p class="form-error">
                 @error('category_id')
                     {{ $message }}
                 @enderror
@@ -60,7 +60,7 @@
                     </option>
                 @endforeach
             </select>
-            <p class="content-form-error-message">
+            <p class="form-error">
                 @error('item_condition_id')
                     {{ $message }}
                 @enderror
@@ -69,14 +69,14 @@
             <h3 class="item-title">商品名と説明</h3>
             <label class="content-form-label" for="name">商品名</label>
             <input class="content-form-input" type="text" name="name" id="name" value="{{ old('name') }}">
-            <p class="content-form-error-message">
+            <p class="form-error">
                 @error('name')
                     {{ $message }}
                 @enderror
             </p>
             <label class="content-form-label" for="brand">ブランド名</label>
             <input class="content-form-input" type="text" name="brand" id="brand" value="{{ old('brand') }}">
-            <p class="content-form-error-message">
+            <p class="form-error">
                 @error('brand')
                     {{ $message }}
                 @enderror
@@ -84,7 +84,7 @@
 
             <label class="content-form-label" for="description">商品の説明</label>
             <textarea class="content-form-textarea" name="description" id="description">{{ old('description') }}</textarea>
-            <p class="content-form-error-message">
+            <p class="form-error">
                 @error('description')
                     {{ $message }}
                 @enderror
@@ -92,7 +92,7 @@
 
             <label class="content-form-label" for="price">販売価格</label>
             <div class="input-wrapper">
-                <span class="prefix">¥</span>
+                <span class="price-prefix">¥</span>
                 <input class="price-input" type="text" name="price" inputmode="numeric" id="price"
                     value="{{ old('price') }}">
                 <script> //コンマの処理
@@ -105,7 +105,7 @@
                     });
                 </script>
             </div>
-            <p class="content-form-error-message">
+            <p class="form-error">
                 @error('price')
                     {{ $message }}
                 @enderror

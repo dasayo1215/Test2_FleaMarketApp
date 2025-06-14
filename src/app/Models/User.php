@@ -55,6 +55,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Comment::class);
     }
 
+    public function purchases() {
+        return $this->hasMany(Purchase::class, 'buyer_id');
+    }
+
+    public function items() {
+        return $this->hasMany(Item::class, 'seller_id');
+    }
+
     public function sendEmailVerificationNotification() {
         $this->notify(new JapaneseVerifyEmail());
     }

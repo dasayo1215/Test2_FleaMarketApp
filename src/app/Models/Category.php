@@ -13,10 +13,6 @@ class Category extends Model
         'id',
     ];
 
-    public function categories(){
-        return $this->belongsToMany(Category::class);
-    }
-
     public function items(){
         return $this->belongsToMany(Item::class);
     }

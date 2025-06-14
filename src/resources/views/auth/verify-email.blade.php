@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/auth/verify-email.css') }}">
+    <link rel="stylesheet" href="/css/auth/verify-email.css">
 @endsection
 
 @section('content')
-    <div class="content-wrapper4">
+    <div class="content-wrapper-small">
         @if (session('message'))
             <div class="verify-text">
                 {{ session('message') }}

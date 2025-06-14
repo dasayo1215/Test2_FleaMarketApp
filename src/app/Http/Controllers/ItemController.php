@@ -16,12 +16,12 @@ use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
-    public function index(Request $request) {
+    public function listAvailableItems(Request $request) {
         $page = $request->query('page');
         $keyword = $request->query('keyword');
 
         if($page === 'mylist'){
-            return $this->mylist($request);
+            return $this->showMyList($request);
         }
 
         $query = Item::with('purchase');
@@ -41,7 +41,7 @@ class ItemController extends Controller
         return view('items.index', compact('items', 'keyword', 'page'));
     }
 
-    public function mylist(Request $request) {
+    public function showMyList(Request $request) {
         $items = [];
         $keyword = $request->query('keyword');
 
@@ -62,7 +62,7 @@ class ItemController extends Controller
         return view('items.index', compact('items', 'keyword', 'page'));
     }
 
-    public function show($itemId){
+    public function showItem($itemId){
         $item = Item::with(['categories', 'itemCondition', 'purchase'])->findOrFail($itemId);
         $user = Auth::user();
         return view('items.show', compact('item', 'user'));
@@ -124,7 +124,7 @@ class ItemController extends Controller
         return view('items.create', compact('categories', 'conditions'));
     }
 
-    public function store(ExhibitionRequest $request)
+    public function storeItem(ExhibitionRequest $request)
     {
         $validated = $request->validated();
         $sellerId = auth()->id();
@@ -157,7 +157,7 @@ class ItemController extends Controller
         return redirect('/mypage');
     }
 
-    public function uploadImage(UploadImageRequest $request) {
+    public function uploadItemImage(UploadImageRequest $request) {
         $path = $request->file('image')->store('tmp', 'public');
 
         return response()->json([

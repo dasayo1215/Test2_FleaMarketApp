@@ -33,12 +33,16 @@ class Item extends Model
         return $this->hasMany(Like::class);
     }
 
-    public function isLikedBy($user) {
-        return $this->likes->where('user_id', $user->id)->isNotEmpty();
-    }
-
     public function comments() {
         return $this->hasMany(Comment::class);
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class, 'seller_id');
+    }
+
+    public function isLikedBy($user) {
+        return $this->likes->where('user_id', $user->id)->isNotEmpty();
     }
 }
 

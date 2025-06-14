@@ -50,7 +50,7 @@ class PurchaseController extends Controller
             $purchase = Purchase::create($data); // 仮保存
         }
 
-        // ↓ 追加：選択された支払い方法IDをビューに渡す
+        // 選択された支払い方法IDをビューに渡す
         $selectedPaymentMethodId = session('selected_payment_method_id', null);
 
         return view('purchases.create', compact(
@@ -168,11 +168,11 @@ class PurchaseController extends Controller
         return redirect()->route('purchase.show', $purchase->item_id);
     }
 
-    public function success() {
+    public function showSuccess() {
         return view('purchases.checkout')->with('message', '支払いが成功しました。');
     }
 
-    public function cancel() {
+    public function handleCancel() {
         return view('purchases.checkout')->with('message', '支払いがキャンセルされました。');
     }
 }

@@ -78,8 +78,15 @@
 }
 
 .like-button {
+    margin: 0;
+    padding: 0;
     border: none;
-    background: transparent;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
 }
 
 .content-purchase-btn {
@@ -190,6 +197,13 @@
     margin-top: 10px;
 }
 
+.btn-unverified {
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .comment-unavailable {
     border: none;
     background-color: rgb(217, 217, 217);
@@ -232,14 +246,4 @@
     height: auto;
 }
 
-.like-button {
-    margin: 0;
-    padding: 0;
-    border: none;
-    background: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: auto;
-    height: auto;
-}
+

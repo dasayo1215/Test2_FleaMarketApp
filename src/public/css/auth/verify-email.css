@@ -1,15 +1,13 @@
-.content-wrapper4 {
+.content-wrapper-small {
 	margin: 0 auto;
 	width: 90%;
 	max-width: 1540px;
 	text-align: center;
-
 }
 
 .content-form {
 	width: 100%;
 }
-
 
 .verify-text {
 	font-weight: bold;

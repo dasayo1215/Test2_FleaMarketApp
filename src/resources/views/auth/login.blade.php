@@ -3,18 +3,18 @@
 @section('content')
     <div class="content-wrapper">
         <h2 class="content-heading">ログイン</h2>
-        <form class="content-form-form" action="/login" method="post">
+        <form class="content-form-wrapper" action="/login" method="post">
             @csrf
             <label class="content-form-label" for="email">メールアドレス</label>
             <input class="content-form-input form-control" type="text" name="email" id="email"  value="{{ old('email') }}">
-            <p class="content-form-error-message">
+            <p class="form-error">
                 @error('email')
                     {{ $message }}
                 @enderror
             </p>
             <label class="content-form-label" for="password">パスワード</label>
             <input class="content-form-input" type="password" name="password" id="password">
-            <p class="content-form-error-message">
+            <p class="form-error">
                 @error('password')
                     {{ $message }}
                 @enderror

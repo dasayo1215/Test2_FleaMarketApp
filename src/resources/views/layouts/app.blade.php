@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COACHTECH</title>
-    <link rel="stylesheet" href="{{ asset('css/sanitize.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/sanitize.css">
     @yield('css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script>
@@ -23,7 +23,7 @@
             </a>
             @if (!Route::is('login') && !Route::is('register'))
                 <ul class="header-nav">
-                    <li class="header-nav-item-search">
+                    <li class="header-nav-search">
                         <form class="header-nav-search-form form-control" action="{{ route('index') }}" method="GET">
                             <input class="header-nav-search-input form-control" type="text" name="keyword"
                                 placeholder="なにをお探しですか？" value="{{ request('keyword') }}">

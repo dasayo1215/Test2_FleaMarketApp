@@ -8,7 +8,7 @@ use App\Models\Purchase;
 
 class StripeWebhookController extends Controller
 {
-    public function handle(Request $request)
+    public function handlePayment(Request $request)
     {
         $payload = $request->getContent();
         $sigHeader = $request->header('Stripe-Signature');

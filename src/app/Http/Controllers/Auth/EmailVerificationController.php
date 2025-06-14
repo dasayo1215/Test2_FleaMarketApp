@@ -8,18 +8,18 @@ use App\Http\Controllers\Controller;
 
 class EmailVerificationController extends Controller
 {
-    public function notice()
+    public function showNotice()
     {
         return view('auth.verify-email');
     }
 
-    public function verify(EmailVerificationRequest $request)
+    public function verifyEmail(EmailVerificationRequest $request)
     {
         $request->fulfill(); // 認証完了
         return redirect('/mypage/profile');
     }
 
-    public function resend(Request $request)
+    public function resendVerificationEmail(Request $request)
     {
         $request->user()->sendEmailVerificationNotification();
         return back()->with('message', '登録していただいたメールアドレスに認証メールを送付しました。');

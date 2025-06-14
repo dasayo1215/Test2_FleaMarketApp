@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/purchases/create.css') }}">
+    <link rel="stylesheet" href="/css/purchases/create.css">
 @endsection
 
 @section('content')
-    <div class="content-wrapper3">
+    <div class="content-wrapper-small">
 
-        <div class="wrapper-1">
-            <div class="wrapper-1-1">
+        <div class="item-info-wrapper">
+            <div class="item-main-detail">
                 <img class="image-square" src="{{ asset('storage/items/' . $item->image_filename) }}"
                     alt="{{ $item->name }}">
                 <div class="item-detail">
@@ -33,7 +33,7 @@
                     @endforeach
                 </select>
             </div>
-            <p class="content-form-error-message payment-method-error">
+            <p class="form-error payment-method-error">
                 @error('payment_method')
                     {{ $message }}
                 @enderror
@@ -49,18 +49,18 @@
                 {{ $purchase->building }}
             </div>
             @if (!empty($address_error))
-                <p class="content-form-error-message address-group-error">
+                <p class="form-error address-group-error">
                     {{ $address_error }}
                 </p>
             @endif
-            <p class="content-form-error-message address-group-error">
+            <p class="form-error address-group-error">
                 @error('address_group')
                     {{ $message }}
                 @enderror
             </p>
         </div>
 
-        <div class="wrapper-2">
+        <div class="purchase-form-wrapper">
             {{-- 購入フォーム（POST） --}}
             <form class="purchase-form" action="{{ url('/purchase/' . $item->id) }}" method="post">
                 @csrf

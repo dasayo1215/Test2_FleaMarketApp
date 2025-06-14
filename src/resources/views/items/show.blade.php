@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/items/show.css') }}">
+    <link rel="stylesheet" href="/css/items/show.css">
 @endsection
 
 @section('content')
     <div class="item-content-wrapper">
         <div class="image-container">
-            <img class="image-square" src="{{ asset('storage/items/' . $item->image_filename) }}"
+            <img class="image-square" src="{{ asset('storage/items/' . $item->image_filename) }}?v={{ now()->timestamp }}"
                 alt="{{ $item->name }}"></img>
             @if ($item->purchase && $item->purchase->completed_at !== null)
                 <div class="sold-label">Sold</div>
@@ -27,16 +27,25 @@
                     @endphp
                     <div class="content-like">
                         @auth
-                            <form class="like-form" method="POST" action="{{ route('like', $item->id) }}">
-                                @csrf
-                                <button class="like-button" data-item-id="{{ $item->id }}">
-                                    <img class="content-like-img"
-                                        src="{{ $isLiked ? asset('storage/assets/star-on.png') : asset('storage/assets/star-off.png') }}"
-                                        alt="いいね">
-                                </button>
-                            </form>
+                            @if (!Auth::user()->hasVerifiedEmail())
+                                {{-- メール未認証ユーザー --}}
+                                <a href="{{ route('verification.notice') }}" class="like-button-unverified">
+                                    <img class="content-like-img" src="{{ asset('storage/assets/star-off.png') }}"
+                                        alt="いいね（未認証）">
+                                </a>
+                            @else
+                                {{-- メール認証済みユーザー --}}
+                                <form class="like-form" method="POST" action="{{ route('like', $item->id) }}">
+                                    @csrf
+                                    <button class="like-button" data-item-id="{{ $item->id }}">
+                                        <img class="content-like-img"
+                                            src="{{ $isLiked ? asset('storage/assets/star-on.png') : asset('storage/assets/star-off.png') }}"
+                                            alt="いいね">
+                                    </button>
+                                </form>
+                            @endif
                         @else
-                            {{-- ゲストユーザー：非アクティブ表示 --}}
+                            {{-- ゲストユーザー --}}
                             <div class="like-button disabled">
                                 <img class="content-like-img-guest" src="{{ asset('storage/assets/star-off.png') }}"
                                     alt="いいね">
@@ -112,7 +121,7 @@
                 @csrf
                 <label class="content-form-label" for="comment">商品へのコメント</label>
                 <textarea class="content-form-textarea form-control" name="comment" id="comment" cols="30" rows="10"></textarea>
-                <p class="content-form-error-message">
+                <p class="form-error">
                     @error('comment')
                         {{ $message }}
                     @enderror
@@ -120,7 +129,18 @@
                 @if ($purchase && !is_null($purchase->completed_at))
                     <div class="comment-unavailable">コメントできません</div>
                 @else
-                    <input class="content-form-btn" type="submit" value="コメントを送信する" id="submit-comment">
+                    @auth
+                        @if (!Auth::user()->hasVerifiedEmail())
+                            <a class="content-form-btn btn-unverified" href="{{ route('verification.notice') }}"
+                                class="content-form-btn comment-unverified">
+                                コメントを送信する
+                            </a>
+                        @else
+                            <input class="content-form-btn" type="submit" value="コメントを送信する" id="submit-comment">
+                        @endif
+                    @else
+                        <input class="content-form-btn" type="submit" value="コメントを送信する" id="submit-comment">
+                    @endauth
                 @endif
             </form>
         </div>
@@ -172,7 +192,7 @@
                     }
 
                     const formData = new FormData(this);
-                    const errorMessage = document.querySelector('.content-form-error-message');
+                    const errorMessage = document.querySelector('.form-error');
                     errorMessage.textContent = ''; // エラーをリセット
 
                     fetch(this.action, {
@@ -210,7 +230,7 @@
                                 const iconCountEl = document.getElementById('comment-icon-count');
 
                                 if (countEl) countEl.textContent = parseInt(countEl.textContent) +
-                                1;
+                                    1;
                                 if (iconCountEl) iconCountEl.textContent = parseInt(iconCountEl
                                     .textContent) + 1;
 

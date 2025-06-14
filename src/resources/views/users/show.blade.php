@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/users/show.css') }}">
+    <link rel="stylesheet" href="/css/users/show.css">
 @endsection
 
 @section('content')
@@ -19,10 +19,10 @@
         @php
             $activePage = request('page') ?? 'sell';
         @endphp
-        <a class="page-sell {{ $activePage === 'sell' ? 'active' : '' }}" href="{{ url('/mypage?page=sell') }}">出品した商品</a>
-        <a class="page-buy {{ $activePage === 'buy' ? 'active' : '' }}" href="{{ url('/mypage?page=buy') }}">購入した商品</a>
+        <a class="page-sell {{ $activePage === 'sell' ? 'page-active' : '' }}" href="{{ url('/mypage?page=sell') }}">出品した商品</a>
+        <a class="page-buy {{ $activePage === 'buy' ? 'page-active' : '' }}" href="{{ url('/mypage?page=buy') }}">購入した商品</a>
     </div>
-    <div class="content-wrapper3">
+    <div class="profile-wrapper">
         @foreach ($items as $item)
             <a class="item-container-link" href="{{ url('/item/' . $item->id) }}">
                 <div class="item-container">

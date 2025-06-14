@@ -15,13 +15,13 @@ class UserController extends Controller
         $page = $request->query('page');
 
         if($page === 'buy'){
-            return $this->purchasedItems();
+            return $this->showPurchasedItems();
         }else{
-            return $this->listedItems();
+            return $this->showListedItems();
         }
     }
 
-    public function purchasedItems(){
+    public function showPurchasedItems(){
         // 購入した商品を表示させる(購入した順)
         $user = Auth::user();
         $items = Item::whereHas('purchase', function($query) use ($user) {
@@ -32,7 +32,7 @@ class UserController extends Controller
         return view('users.show', compact('items', 'user'));
     }
 
-    public function ListedItems(){
+    public function showListedItems(){
         // 出品した商品を表示させる(出品した順)
         $user = Auth::user();
         $items = Item::where('seller_id', $user->id)
@@ -69,7 +69,7 @@ class UserController extends Controller
         return redirect('/');
     }
 
-    public function uploadImage(ProfileRequest $request) {
+    public function uploadProfileImage(ProfileRequest $request) {
         $path = $request->file('image')->store('tmp', 'public');
 
         // JSONレスポンスを返す

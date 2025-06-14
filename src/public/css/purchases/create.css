@@ -1,5 +1,5 @@
 
-.content-wrapper3 {
+.content-wrapper-small {
     margin: 0 auto;
 	width: 90%;
 	max-width: 1540px;
@@ -9,17 +9,17 @@
     justify-content: center;
 }
 
-.wrapper-1 {
+.item-info-wrapper {
     width: 60%;
 }
 
-.wrapper-2 {
+.purchase-form-wrapper {
     width: 30%;
     min-width: 250px;
     max-width: 350px;
 }
 
-.wrapper-1-1 {
+.item-main-detail {
     display: flex;
 }
 

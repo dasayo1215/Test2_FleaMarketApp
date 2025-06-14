@@ -3,25 +3,25 @@
 @section('content')
     <div class="content-wrapper">
         <h2 class="content-heading">住所の変更</h2>
-        <form class="content-form-form" action="{{ url('/purchase/address/' . $itemId) }}" method="post">
+        <form class="content-form-wrapper" action="{{ url('/purchase/address/' . $itemId) }}" method="post">
             @csrf
             <label class="content-form-label" for="postal_code">郵便番号</label>
             <input class="content-form-input form-control" type="text" name="postal_code" id="postal_code" value="{{ old('postal_code') }}">
-            <p class="content-form-error-message">
+            <p class="form-error">
                 @error('postal_code')
                     {{ $message }}
                 @enderror
             </p>
             <label class="content-form-label" for="address">住所</label>
             <input class="content-form-input form-control" type="text" name="address" id="address" value="{{ old('address') }}">
-            <p class="content-form-error-message">
+            <p class="form-error">
                 @error('address')
                     {{ $message }}
                 @enderror
             </p>
             <label class="content-form-label" for="building">建物名</label>
             <input class="content-form-input form-control" type="text" name="building" id="building" value="{{ old('building') }}">
-            <p class="content-form-error-message">
+            <p class="form-error">
                 @error('building')
                     {{ $message }}
                 @enderror
