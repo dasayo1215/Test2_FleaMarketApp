@@ -121,6 +121,24 @@ Forwarding  https://3092-xx-xx-xx.ngrok-free.app -> http://localhost:80
 7. テストが終わったら、Ctrl+Cなどでトンネルを停止してください。
    ※次回再度使用する場合は ngrok http 80 を実行して、新しいURLを取得しなおしてください。
 
+## Stripe CLI 設定について
+
+- Stripe CLI の設定ファイルは `~/.config/stripe/config.toml` にあります。
+- この中の `test_mode_api_key` は `.env` の `STRIPE_SECRET` と同じ値にしてください。
+- 編集できない場合は、権限を確認し、必要に応じて以下のコマンドで権限を付与してください。
+
+```bash
+sudo chmod u+w ~/.config/stripe/config.toml
+nano ~/.config/stripe/config.toml
+```
+編集後はStripe CLIのコンテナを再起動してください。
+
+```bash
+docker-compose restart stripe-cli
+```
+webhookの署名検証エラーは設定ミスマッチによることが多いので、必ず一致させてください。
+
+
 ## Stripe CLI の設定について
 
 1. docker run --rm -it -v ~/.config/stripe:/root/.config/stripe stripe/stripe-cli login
@@ -139,7 +157,20 @@ STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxx
 ```
 
 ## 環境構築時の注意点
-"Permission denied" 関係のエラーが出た際は、まず下記を試してください。
+Laravel はログファイルやキャッシュファイルを `storage` 以下に書き出します。clone 直後や新規環境構築時は、以下のコマンドで適切なパーミッションを設定してください：
+```bash
+# ログファイルを手動で作成（存在しない場合）
+touch src/storage/logs/laravel.log
+
+# 所有者を Webサーバーユーザー（www-data）に変更
+sudo chown -R www-data:www-data src/storage
+
+# 書き込み権限を付与
+sudo chmod -R 775 src/storage
+sudo chmod -R 775 src/storage/logs
+```
+
+"Permission denied" 関係のエラーが出た際は、下記を試してください。
 
 ```bash
 sudo chmod -R 777 src/*
