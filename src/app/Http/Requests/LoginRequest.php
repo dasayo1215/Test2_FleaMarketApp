@@ -3,8 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Validator;
 
 class LoginRequest extends FormRequest
 {
@@ -38,22 +36,5 @@ class LoginRequest extends FormRequest
             'password.required' => 'パスワードを入力してください',
             'password.min' => 'パスワードは8文字以上で入力してください',
         ];
-    }
-
-    public function withValidator($validator) {
-        $validator->after(function ($validator) {
-            // 入力に他のエラーがあれば、ここで終了
-            if ($validator->errors()->any()) {
-                return;
-            }
-
-            // 認証試行（成功したらセッションにログインされる）
-            if (!Auth::attempt([
-                'email' => $this->input('email'),
-                'password' => $this->input('password'),
-            ])) {
-                $validator->errors()->add('password', 'ログイン情報が登録されていません');
-            }
-        });
     }
 }

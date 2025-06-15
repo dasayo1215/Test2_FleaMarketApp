@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Item;
+use App\Models\ItemCondition;
+use App\Models\Category;
 use Database\Seeders\ItemConditionsSeeder;
 use Database\Seeders\CategoriesSeeder;
 
@@ -24,9 +26,9 @@ class ItemPostTest extends TestCase
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        // ここで条件とカテゴリを取得（適当に最初のものを使う）
-        $condition = \App\Models\ItemCondition::first();
-        $category = \App\Models\Category::first();
+        // ここで条件とカテゴリを取得
+        $condition = ItemCondition::first();
+        $category = Category::first();
 
         Storage::fake('public');
 

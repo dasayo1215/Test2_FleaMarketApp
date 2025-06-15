@@ -19,10 +19,10 @@ class StripeWebhookController extends Controller
                 $payload, $sigHeader, $secret
             );
         } catch (\UnexpectedValueException $e) {
-            \Log::error('Stripe webhook: Invalid payload', ['error' => $e->getMessage()]);
+            Log::error('Stripe webhook: Invalid payload', ['error' => $e->getMessage()]);
             return response('Invalid payload', 400); // 無効なペイロード
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
-            \Log::error('Stripe webhook: Signature verification failed', ['error' => $e->getMessage()]); // 署名検証に失敗
+            Log::error('Stripe webhook: Signature verification failed', ['error' => $e->getMessage()]); // 署名検証に失敗
             return response('Signature verification failed', 400);
         }
 

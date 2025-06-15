@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class EmailVerificationController extends Controller
@@ -19,9 +18,9 @@ class EmailVerificationController extends Controller
         return redirect('/mypage/profile');
     }
 
-    public function resendVerificationEmail(Request $request)
+    public function resendVerificationEmail()
     {
-        $request->user()->sendEmailVerificationNotification();
+        auth()->user()->sendEmailVerificationNotification();
         return back()->with('message', '登録していただいたメールアドレスに認証メールを送付しました。');
     }
 }

@@ -28,25 +28,17 @@ class PurchaseController extends Controller
         $selectedPaymentMethodId = session('selected_payment_method_id', null);
 
         // 既に仮保存されている購入レコードがあるか検索
-        $purchase = Purchase::where('item_id', $item->id)
-            ->whereNull('completed_at')
-            ->first();
+        $purchase = $item->purchase()->whereNull('completed_at')->first();
 
         if (!$purchase) {
             $data = [
                 'buyer_id' => $user->id,
                 'item_id' => $item->id,
                 'purchase_price' => $item->price,
+                'postal_code' => $user->postal_code ?? null,
+                'address' => $user->address ?? null,
+                'building' => $user->building ?? null,
             ];
-            if (!empty($user->postal_code)) {
-                $data['postal_code'] = $user->postal_code;
-            }
-            if (!empty($user->address)) {
-                $data['address'] = $user->address;
-            }
-            if (!empty($user->building)) {
-                $data['building'] = $user->building;
-            }
             $purchase = Purchase::create($data); // 仮保存
         }
 
@@ -79,10 +71,12 @@ class PurchaseController extends Controller
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
         $user = Auth::user();
-        $purchase = Purchase::where('item_id', $itemId)
+        $purchase = Purchase::with('item')
+            ->where('item_id', $itemId)
             ->where('buyer_id', $user->id)
             ->whereNull('completed_at')
             ->firstOrFail();
+
         $data = $request->validated();
 
         $purchase->update([
@@ -93,7 +87,7 @@ class PurchaseController extends Controller
             'completed_at' => now(),
         ]);
 
-        $method = PaymentMethod::find($data['payment_method']);
+        $method = $purchase->paymentMethod;
 
         $paymentMethodTypes = [];
 

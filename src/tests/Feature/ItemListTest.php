@@ -39,9 +39,9 @@ class ItemListTest extends TestCase
         $this->seed(PaymentMethodsSeeder::class);
         $this->seed(ItemsSeeder::class);
 
-        $paymentMethod = \App\Models\PaymentMethod::first();
+        $paymentMethod = PaymentMethod::first();
 
-        $purchase = \App\Models\Purchase::factory()->create([
+        $purchase = Purchase::factory()->create([
             'completed_at' => now(),
             'paid_at' => now(),
             'payment_method_id' => $paymentMethod->id,

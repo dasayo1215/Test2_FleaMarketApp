@@ -11,7 +11,6 @@ use App\Models\Category;
 use App\Models\ItemCondition;
 use App\Models\Item;
 use App\Models\Like;
-use App\Models\Comment;
 use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
@@ -71,9 +70,9 @@ class ItemController extends Controller
     public function storeComment(CommentRequest $request, $itemId){
         $request->validated();
 
-        $comment = Comment::create([
+        $item = Item::findOrFail($itemId);
+        $comment = $item->comments()->create([
             'user_id' => Auth::id(),
-            'item_id' => $itemId,
             'comment' => $request->comment,
         ]);
 
@@ -93,9 +92,7 @@ class ItemController extends Controller
     public function toggleLike(Request $request, $itemId){
         $user = Auth::user();
         $item = Item::findOrFail($itemId);
-        $like = Like::where('user_id', $user->id)
-                    ->where('item_id', $itemId)
-                    ->first();
+        $like = $item->likes()->where('user_id', $user->id)->first();
 
         if ($like) {
             $like->delete();

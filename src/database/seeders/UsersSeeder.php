@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use App\Models\User;
 
 class UsersSeeder extends Seeder
@@ -15,10 +14,7 @@ class UsersSeeder extends Seeder
      */
     public function run()
     {
-        /**
-         * 開発用シーディング：1000人のダミーユーザーを生成します。
-         * 負荷テストやUIスケール検証などに使えます。
-         */
-        User::factory()->count(1000)->create();
+        // 開発用シーディング：100人のダミーユーザーを生成します。
+        User::factory()->count(100)->create();
     }
 }

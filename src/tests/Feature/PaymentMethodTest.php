@@ -3,12 +3,9 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Session;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Item;
-use App\Models\Purchase;
-use App\Models\PaymentMethod;
 use Database\Seeders\ItemConditionsSeeder;
 use Database\Seeders\PaymentMethodsSeeder;
 use Symfony\Component\DomCrawler\Crawler;
@@ -17,6 +14,7 @@ class PaymentMethodTest extends TestCase
 {
     use RefreshDatabase;
 
+    // 小計画面で変更が即時反映される
     public function test_selected_payment_method_is_reflected_in_purchase_form()
     {
         $this->seed(ItemConditionsSeeder::class);

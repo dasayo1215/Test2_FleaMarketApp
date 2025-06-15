@@ -15,11 +15,17 @@ class ItemsSeeder extends Seeder
 {
     public function run()
     {
-        $user = User::factory()->create();  // ユーザー1人作成
-        $items = $this->getItems();         // アイテム配列取得
+        $users = User::all();
+        // 既存ユーザーがいない場合は作成
+        if ($users->isEmpty()) {
+            $users = User::factory()->count(3)->create();
+        }
+
+        $items = $this->getItems();
 
         foreach ($items as $itemData) {
-            $this->seedItem($itemData, $user); // 各アイテムの登録処理
+            $randomUser = $users->random(1)->first();
+            $this->seedItem($itemData, $randomUser);
         }
     }
 

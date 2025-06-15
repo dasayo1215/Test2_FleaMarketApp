@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Item;
 use App\Models\Purchase;
 use App\Models\Like;
+use App\Models\PaymentMethod;
 use Database\Seeders\ItemConditionsSeeder;
 use Database\Seeders\PaymentMethodsSeeder;
 use Database\Seeders\ItemsSeeder;
@@ -27,7 +28,7 @@ class MyListTest extends TestCase
         // いいねした商品
         $likedItem = Item::factory()->create(['name' => 'いいねした商品']);
 
-        \App\Models\Like::create([
+        Like::create([
             'user_id' => $user->id,
             'item_id' => $likedItem->id,
         ]);
@@ -55,18 +56,18 @@ class MyListTest extends TestCase
         $user = User::factory()->create();
 
         $likedItem = Item::factory()->create();
-        \App\Models\Like::create([
+        Like::create([
             'user_id' => $user->id,
             'item_id' => $likedItem->id,
         ]);
 
         // 購入済みにする
-        \App\Models\Purchase::factory()->create([
+        Purchase::factory()->create([
             'item_id' => $likedItem->id,
             'buyer_id' => $user->id,
             'completed_at' => now(),
             'paid_at' => now(),
-            'payment_method_id' => \App\Models\PaymentMethod::first()->id,
+            'payment_method_id' => PaymentMethod::first()->id,
         ]);
 
         $response = $this->actingAs($user)->get('/?page=mylist');
@@ -85,7 +86,7 @@ class MyListTest extends TestCase
             'seller_id' => $user->id,
             'name' => '自分の商品',
         ]);
-        \App\Models\Like::create([
+        Like::create([
             'user_id' => $user->id,
             'item_id' => $ownItem->id,
         ]);
@@ -94,7 +95,7 @@ class MyListTest extends TestCase
         $otherItem = Item::factory()->create([
             'name' => '他人の商品',
         ]);
-        \App\Models\Like::create([
+        Like::create([
             'user_id' => $user->id,
             'item_id' => $otherItem->id,
         ]);

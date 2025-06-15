@@ -26,7 +26,7 @@ class UserController extends Controller
         $user = Auth::user();
         $items = Item::whereHas('purchase', function($query) use ($user) {
             $query->where('buyer_id', $user->id)->whereNotNull('completed_at');
-        })->with('purchase')->latest()->get()
+        })->with('purchase')->get()
             ->sortByDesc(fn($item) => $item->purchase->completed_at)
             ->values();
         return view('users.show', compact('items', 'user'));
