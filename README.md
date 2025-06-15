@@ -28,24 +28,23 @@ README
         1. docker-compose exec php bash
         2. composer install
         3. .env.exampleファイルの名前を変更して.envファイルを作成。
-        4. .envに以下の環境変数を追加
-              DB_CONNECTION=mysql
-              DB_HOST=mysql
-              DB_PORT=3306
-              DB_DATABASE=laravel_db
-              DB_USERNAME=laravel_user
-              DB_PASSWORD=laravel_pass
-        5. php artisan key:generate
+        4. php artisan key:generate
+        5. php artisan storage:link
         6. php artisan migrate
         7. php artisan db:seed
+        8. （任意）キャッシュクリアや設定の最適化
+
+            ```bash
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            ```
+            
 
 ## Seeder について
 
-    - `UsersSeeder` ではテスト用に1000人のダミーユーザーを生成します。
-    - デフォルトでは自動実行されません。
-    - 必要な場合は以下のコマンドで個別実行してください：
+    - `UsersSeeder` ではテスト用に100人のダミーユーザーを生成しています。
 
-    - php artisan db:seed --class=UserSeeder
 
 ## MailHog の利用について
 
@@ -67,44 +66,86 @@ README
 ## Stripe の設定について
 
     1. [Stripe](https://dashboard.stripe.com/register)でアカウントを作成してください（テストモードでOK）。
-    2. ダッシュボードからAPIキー（公開可能キーと秘密キー）を取得してください。
+    2. ダッシュボードからAPIキー（公開可能キーとシークレットキー）を取得してください。
     3. プロジェクトの `.env` ファイルに以下の環境変数を追加します。
+    （STRIPE_KEYに公開可能キー、STRIPE_SECRETにシークレットキー）
 
         ```env
-        STRIPE_SECRET=sk_test_xxxxxxxxxxxxxxxxxxxxx
         STRIPE_KEY=pk_test_xxxxxxxxxxxxxxxxxxxxx
+        STRIPE_SECRET=sk_test_xxxxxxxxxxxxxxxxxxxxx
         ```
 
-    4. `.env` はGit管理から除外しています。APIキーは絶対に公開しないよう注意してください。
+    ※　`.env` はGit管理から除外しています。APIキーは絶対に公開しないよう注意してください。
 
 ## ngrok と webhook の設定について（毎回設定）
-
     支払いテストの実行のため、ngrokを利用します。
     ※あくまで開発専用で、本番環境では使わないようにしてください。
-    1. ngrokでアカウント作成
-    1. ngrok http 80
-    2. 出力されるURLをコピー
-        > Forwarding  https://3092-xx-xx-xx.ngrok-free.app -> http://localhost:80
-        上記では ”https://3092-xx-xx-xx.ngrok-free.app” の部分をコピーします。
-    3. Stripeダッシュボードの送信先にWebhook URLを登録
-        上記でコピーしたURLの後ろに「/webhook/stripe」を追記して登録してください。
-        例）https://xxxx.ngrok-free.app/webhook/stripe
-    ※利用終了後はCtrl+Cなどでトンネルを停止してください。
 
-    どのイベントを送信するとか選ばねばならない？stripeの設定？
+### 事前準備：ngrokのインストール
+
+1. [ngrok公式サイト](https://ngrok.com/)にアクセスし、無料アカウントを作成してください。
+2. 公式サイトの「Setup & Installation」セクションに従い、OSに合った方法でngrokをインストールしてください。
+   （Homebrew、またはzipファイルを直接ダウンロードして展開 など）
+   ※zipファイルからインストールした場合は、必要に応じてngrokの実行ファイルがあるフォルダをPATHに追加してください。  
+4. 公式サイトに従い、ターミナルで以下コマンドを実行し、ngrokにアカウントの認証情報（Authtoken）を設定します。
+
+```bash
+ngrok config add-authtoken YOUR_AUTHTOKEN
+```
+※Authtoken（上記でいうYOUR_AUTHTOKEN）はngrok公式サイトの「Setup & Installation」セクションで確認できます。
+
+### ngrokトンネルの起動手順
+1. 以下のコマンドでローカルのポート80番を公開します。
+
+```bash
+ngrok http 80
+```
+
+2. 出力されるURLをコピーしてください。
+
+```nginx
+Forwarding  https://3092-xx-xx-xx.ngrok-free.app -> http://localhost:80
+```
+上記の「https://3092-xx-xx-xx.ngrok-free.app」の部分をコピーします。
+
+3. Stripeダッシュボードの左サイドバーから 「開発者」 > 「Webhook」 にアクセスし、「+ エンドポイントを追加」をクリックします。
+4. 「受信するイベントの選択」で以下の3つを選択して「続行」を押下します。
+    ・checkout.session.async_payment_failed
+    ・checkout.session.async_payment_succeeded
+    ・checkout.session.completed
+5. 「エンドポイントの設定」画面で、送信先タイプに 「Webhookエンドポイント」 を選択して「続行」を押下します。
+
+6. エンドポイントURLには、手順2でコピーしたURLの末尾に /webhook/stripe を付けて入力します。
+   例）https://xxxx.ngrok-free.app/webhook/stripe
+   ※「送信先名」などの項目は任意で入力してください。
+   以上で送信先の設定が完了します。
+
+7. テストが終わったら、Ctrl+Cなどでトンネルを停止してください。
+   ※次回再度使用する場合は ngrok http 80 を実行して、新しいURLを取得しなおしてください。
 
 ## Stripe CLI の設定について
 
-    1. docker run --rm -it -v ~/.config/stripe:/root/.config/stripe stripe/stripe-cli login
-        指示に従い、出力されたURLに接続して認証を行います。
-    2. docker-compose logs stripe-cli
-        下記のようにキーが出力される。
-        > stripe-cli  | Ready! You are using Stripe API Version [2025-04-30.basil]. Your webhook signing secret is whsec_xxxxxxxxxxxxxxxxxxxxx (^C to quit)
-    3. プロジェクトの `.env` ファイルに以下の環境変数を追加します。
+1. docker run --rm -it -v ~/.config/stripe:/root/.config/stripe stripe/stripe-cli login
+   指示に従い、出力されたURLに接続して認証を行います。
+2. docker-compose logs stripe-cli
+   下記のようにキーが出力される。
+   
+```bash
+> stripe-cli  | Ready! You are using Stripe API Version [2025-04-30.basil]. Your webhook signing secret is whsec_xxxxxxxxxxxxxxxxxxxxx (^C to quit)
+```
+3. プロジェクトの `.env` ファイルに以下の環境変数を追加します。
 
-        ```env
-        STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxx
-        ```
+```env
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxx
+```
+
+## 環境構築時の注意点
+"Permission denied" 関係のエラーが出た際は、まず下記を試してください。
+```bash
+sudo chmod -R 777 src/*
+```
+※ chmod 777 はすべてのユーザーに書き込み権限を与えるため、セキュリティ上リスクがあります。
+開発環境での一時的な対処としてのみ使用し、本番環境では適切な権限設定をおすすめします。
 
 ## 支払いテストについて
 
@@ -211,6 +252,7 @@ npm run test:safari
     - paid_atカラムで管理
 
 ## ER図
+![Case1 drawio](https://github.com/user-attachments/assets/1bcdbaa6-310f-47af-944f-19104026ab87)
 
 
 ## 画面例
