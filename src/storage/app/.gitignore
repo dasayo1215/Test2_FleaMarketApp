@@ -1,14 +1,7 @@
-# すべて除外（最初にすべて除外）
 *
-
-# public フォルダ自体は追跡対象に戻す
 !public/
-
-# assets ディレクトリだけ含める
 !public/assets/
 !public/assets/**
-
-# items, tmp, users は明示的に除外
 public/items/
 public/tmp/
 public/users/
