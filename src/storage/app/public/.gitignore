@@ -1,2 +1,8 @@
 *
-!.gitignore
+
+!assets/
+!assets/**
+
+items/
+tmp/
+users/

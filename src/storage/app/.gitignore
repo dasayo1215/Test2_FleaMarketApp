@@ -2,6 +2,7 @@
 !public/
 !public/assets/
 !public/assets/**
-public/items/
-public/tmp/
-public/users/
+
+/public/items/
+/public/tmp/
+/public/users/
