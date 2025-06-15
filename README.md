@@ -80,8 +80,8 @@ STRIPE_SECRET=sk_test_xxxxxxxxxxxxxxxxxxxxx
 
 1. [ngrok公式サイト](https://ngrok.com/)にアクセスし、無料アカウントを作成してください。
 2. 公式サイトの「Setup & Installation」セクションに従い、OSに合った方法でngrokをインストールしてください。
-   （Homebrew、またはzipファイルを直接ダウンロードして展開 など）
-   ※zipファイルからインストールした場合は、必要に応じてngrokの実行ファイルがあるフォルダをPATHに追加してください。  
+（Homebrew、またはzipファイルを直接ダウンロードして展開 など）
+※zipファイルからインストールした場合は、必要に応じてngrokの実行ファイルがあるフォルダをPATHに追加してください。  
 4. 公式サイトに従い、ターミナルで以下コマンドを実行し、ngrokにアカウントの認証情報（Authtoken）を設定します。
 
 ```bash
@@ -101,13 +101,16 @@ ngrok http 80
 ```nginx
 Forwarding  https://3092-xx-xx-xx.ngrok-free.app -> http://localhost:80
 ```
+
 ※上記の「https://3092-xx-xx-xx.ngrok-free.app」の部分をコピーします。
 
 3. Stripeダッシュボードの左サイドバーから 「開発者」 > 「Webhook」 にアクセスし、「+ エンドポイントを追加」をクリックします。
+
 4. 「受信するイベントの選択」で以下の3つを選択して「続行」を押下します。
-    ・checkout.session.async_payment_failed
-    ・checkout.session.async_payment_succeeded
-    ・checkout.session.completed
+・checkout.session.async_payment_failed
+・checkout.session.async_payment_succeeded
+・checkout.session.completed
+
 5. 「エンドポイントの設定」画面で、送信先タイプに 「Webhookエンドポイント」 を選択して「続行」を押下します。
 
 6. エンドポイントURLには、手順2でコピーしたURLの末尾に /webhook/stripe を付けて入力します。
@@ -121,13 +124,14 @@ Forwarding  https://3092-xx-xx-xx.ngrok-free.app -> http://localhost:80
 ## Stripe CLI の設定について
 
 1. docker run --rm -it -v ~/.config/stripe:/root/.config/stripe stripe/stripe-cli login
-   指示に従い、出力されたURLに接続して認証を行います。
+指示に従い、出力されたURLに接続して認証を行います。
 2. docker-compose logs stripe-cli
-   下記のようにキーが出力される。
+下記のようにキーが出力される。
    
 ```bash
 > stripe-cli  | Ready! You are using Stripe API Version [2025-04-30.basil]. Your webhook signing secret is whsec_xxxxxxxxxxxxxxxxxxxxx (^C to quit)
 ```
+
 3. プロジェクトの `.env` ファイルに以下の環境変数を追加します。
 
 ```env
@@ -136,26 +140,28 @@ STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxx
 
 ## 環境構築時の注意点
 "Permission denied" 関係のエラーが出た際は、まず下記を試してください。
+
 ```bash
 sudo chmod -R 777 src/*
 ```
+
 ※ chmod 777 はすべてのユーザーに書き込み権限を与えるため、セキュリティ上リスクがあります。
 開発環境での一時的な対処としてのみ使用し、本番環境では適切な権限設定をおすすめします。
 
 ## 支払いテストについて
 
-    1. Stripeのテストカード番号は `4242 4242 4242 4242`（任意の有効期限・CVCで利用可能）です。
-    2. 失敗用カードは、、
-    3. コンビニ支払いのテストには。テスト用電話番号 `11111111110` を利用できます。3分後に決済が完了したとみなされます。
+1. Stripeのテストカード番号は `4242 4242 4242 4242`（任意の有効期限・CVCで利用可能）です。
+2. 失敗用カードは、、
+3. コンビニ支払いのテストには。テスト用電話番号 `11111111110` を利用できます。3分後に決済が完了したとみなされます。
 
 ## URL
 
-    - 開発環境：http://localhost/
-    - phpMyAdmin：http://localhost:8080/
-    - MailHog UI: http://localhost:8025/
-        ※ローカル環境で送信された認証メールや通知メールを確認できます。
-    - Stripe Dashboard：https://dashboard.stripe.com/test
-        ※テストモードでの支払い状況やWebhookイベントの確認に使います。
+- 開発環境：http://localhost/
+- phpMyAdmin：http://localhost:8080/
+- MailHog UI: http://localhost:8025/
+※ローカル環境で送信された認証メールや通知メールを確認できます。
+- Stripe Dashboard：https://dashboard.stripe.com/test
+※テストモードでの支払い状況やWebhookイベントの確認に使います。
 
 ## PHPUnit テストの実行方法（当プロジェクト用）
 
@@ -209,11 +215,15 @@ MAIL_FROM_NAME="COACHTECHフリマ 認証"
 ### テスト実行手順
 
 #### ① APP_KEY の生成（初回のみ）
+```
 php artisan key:generate --env=testing
 php artisan config:clear
+```
 
 #### ② テストの実行（すべてのテストを実行）
+```
 php artisan test
+```
 
 ### Stripe のテスト設定について
 `.env.testing` ではセキュリティ上の理由から、以下の Stripe 関連のキーは空欄になっています。
@@ -227,30 +237,32 @@ STRIPE_WEBHOOK_SECRET=
 もし Stripe を使用した決済処理や Webhook のテストを行う場合は、.env（開発環境）と同様に、各種キーを .env.testing に設定してください。
 
 ### 補足事項
-    - 各Featureテストクラスで use RefreshDatabase; を使用しているため、テストごとに自動でマイグレーションが走ります。
-    - Seederは各テスト内で必要なものだけを呼び出す構成です。
-    - phpunit.xml は編集・使用しておらず、.env.testing の設定で切り替え管理しています。
-    - 誤って .env の本番DBを使わないよう注意してください。
+- 各Featureテストクラスで use RefreshDatabase; を使用しているため、テストごとに自動でマイグレーションが走ります。
+- Seederは各テスト内で必要なものだけを呼び出す構成です。
+- phpunit.xml は編集・使用しておらず、.env.testing の設定で切り替え管理しています。
+- 誤って .env の本番DBを使わないよう注意してください。
 
 ## その他
-    - ItemsSeederにおいて、指定してあるダミーの商品データにカテゴリー情報を追加しました。
-    - UsersSeederでは、初年度でのユーザー数1,000人達成を目標としているため、ユーザー数を 1,000人 とした場合のテストを実施した。なお、現状のUsersSeederは100人に設定してある。
-    - メール認証の仕様：
-        - 新規ユーザー登録時にのみ、確認メールを自動送信します。
-        - それ以外の動作で未認証が検出された場合は、認証を促すページにリダイレクトされます（メールは自動送信されません）。
-    - 表示確認テストについて：
-        - Chrome および Firefox は、自身のPCにインストールされているブラウザを使用して表示確認を行いました。
-        - Safari の表示確認は、playwright ディレクトリにて以下のコマンドを実行することで実施しました：
+- ItemsSeederにおいて、指定してあるダミーの商品データにカテゴリー情報を追加しました。
+- UsersSeederでは、初年度でのユーザー数1,000人達成を目標としているため、ユーザー数を 1,000人 とした場合のテストを実施した。なお、現状のUsersSeederは100人に設定してある。
+- メール認証の仕様：
+- 新規ユーザー登録時にのみ、確認メールを自動送信します。
+- それ以外の動作で未認証が検出された場合は、認証を促すページにリダイレクトされます（メールは自動送信されません）。
+- 表示確認テストについて：
+- Chrome および Firefox は、自身のPCにインストールされているブラウザを使用して表示確認を行いました。
+- Safari の表示確認は、playwright ディレクトリにて以下のコマンドを実行することで実施しました：
+
 ```bash
 npm run test:safari
 ```
-    - paid_atカラムで管理
+
+- paid_atカラムで管理
 
 ## ER図
 ![Case1 drawio](https://github.com/user-attachments/assets/1bcdbaa6-310f-47af-944f-19104026ab87)
 
 
 ## 画面例
-    - 登録ページ
+- 登録ページ
 
 
