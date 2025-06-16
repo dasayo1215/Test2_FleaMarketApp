@@ -19,9 +19,12 @@ README
 ## 環境構築
 
 - Dockerビルド
-1. git clone リンク：git@github.com:dasayo1215/Case1_FleaMarketApp.git
+1. git clone git@github.com:dasayo1215/Case1_FleaMarketApp.git
 2. DockerDesktopアプリを立ち上げる
-3. docker-compose up -d --build
+3. クローンしたディレクトリに移動し、下記コマンドを実施
+```
+docker-compose up -d --build
+```
 *MySQLは、OSによって起動しない場合があるのでそれぞれのPCに合わせてdocker-compose.ymlファイルを編集してください。
 
 - Laravel環境構築
