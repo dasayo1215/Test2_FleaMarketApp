@@ -1,0 +1,8 @@
+!.gitignore
+*
+!public/
+!public/assets/
+!public/assets/**
+
+/public/items/
+/public/tmp/
