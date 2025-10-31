@@ -7,6 +7,7 @@ return [
         'img_url' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Armani+Mens+Clock.jpg',
         'condition' => '良好',
         'categories' => ['ファッション'],
+        'user_id' => 1,
     ],
     [
         'name' => 'HDD',
@@ -15,6 +16,7 @@ return [
         'img_url' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/HDD+Hard+Disk.jpg',
         'condition' => '目立った傷や汚れなし',
         'categories' => ['家電'],
+        'user_id' => 1,
     ],
     [
         'name' => '玉ねぎ3束',
@@ -23,6 +25,7 @@ return [
         'img_url' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/iLoveIMG+d.jpg',
         'condition' => 'やや傷や汚れあり',
         'categories' => ['キッチン'],
+        'user_id' => 1,
     ],
     [
         'name' => '革靴',
@@ -31,6 +34,8 @@ return [
         'img_url' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Leather+Shoes+Product+Photo.jpg',
         'condition' => '状態が悪い',
         'categories' => ['ファッション', 'メンズ'],
+        'user_id' => 1,
+
     ],
     [
         'name' => 'ノートPC',
@@ -39,6 +44,7 @@ return [
         'img_url' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Living+Room+Laptop.jpg',
         'condition' => '良好',
         'categories' => ['家電'],
+        'user_id' => 1,
     ],
     [
         'name' => 'マイク',
@@ -47,6 +53,7 @@ return [
         'img_url' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Music+Mic+4632231.jpg',
         'condition' => '目立った傷や汚れなし',
         'categories' => ['家電'],
+        'user_id' => 2,
     ],
     [
         'name' => 'ショルダーバッグ',
@@ -55,6 +62,7 @@ return [
         'img_url' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Purse+fashion+pocket.jpg',
         'condition' => 'やや傷や汚れあり',
         'categories' => ['ファッション', 'レディース'],
+        'user_id' => 2,
     ],
     [
         'name' => 'タンブラー',
@@ -63,6 +71,7 @@ return [
         'img_url' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Tumbler+souvenir.jpg',
         'condition' => '状態が悪い',
         'categories' => ['キッチン'],
+        'user_id' => 2,
     ],
     [
         'name' => 'コーヒーミル',
@@ -71,6 +80,7 @@ return [
         'img_url' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/Waitress+with+Coffee+Grinder.jpg',
         'condition' => '良好',
         'categories' => ['キッチン'],
+        'user_id' => 2,
     ],
     [
         'name' => 'メイクセット',
@@ -79,5 +89,6 @@ return [
         'img_url' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/%E5%A4%96%E5%87%BA%E3%83%A1%E3%82%A4%E3%82%AF%E3%82%A2%E3%83%83%E3%83%95%E3%82%9A%E3%82%BB%E3%83%83%E3%83%88.jpg',
         'condition' => '目立った傷や汚れなし',
         'categories' => ['コスメ', 'レディース'],
+        'user_id' => 2,
     ],
 ];

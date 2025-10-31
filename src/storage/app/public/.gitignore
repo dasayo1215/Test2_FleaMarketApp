@@ -3,6 +3,8 @@
 !assets/
 !assets/**
 
+!users/
+!users/**
+
 items/
 tmp/
-users/

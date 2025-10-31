@@ -3,6 +3,8 @@
 !public/assets/
 !public/assets/**
 
+!public/users/
+!public/users/**
+
 /public/items/
 /public/tmp/
-/public/users/

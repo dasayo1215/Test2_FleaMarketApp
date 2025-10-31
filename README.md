@@ -86,7 +86,7 @@ STRIPE_SECRET=sk_test_xxxxxxxxxxxxxxxxxxxxx
 1. [ngrok公式サイト](https://ngrok.com/)にアクセスし、無料アカウントを作成してください。
 2. 公式サイトの「Setup & Installation」セクションに従い、OSに合った方法でngrokをインストールしてください。
 （Homebrew、またはzipファイルを直接ダウンロードして展開 など）
-※zipファイルからインストールした場合は、必要に応じてngrokの実行ファイルがあるフォルダをPATHに追加してください。  
+※zipファイルからインストールした場合は、必要に応じてngrokの実行ファイルがあるフォルダをPATHに追加してください。
 4. 公式サイトに従い、ターミナルで以下コマンドを実行し、ngrokにアカウントの認証情報（Authtoken）を設定します。
 
 ```bash
@@ -201,6 +201,14 @@ MAIL_ENCRYPTION=null
 ※ローカル環境で送信された認証メールや通知メールを確認できます。
 - Stripe Dashboard：https://dashboard.stripe.com/test <br>
 ※テストモードでの支払い状況やWebhookイベントの確認に使います。
+
+## ダミーユーザー
+- 本アプリには、以下の3名のユーザーを用意しています（メール認証済み）。
+|名前|Eメール|パスワード|備考|
+|ユーザー1|user1@example.com|user1234|**CO01〜CO05** の出品者|
+|ユーザー2|user2@example.com|user1234|**CO06〜CO10** の出品者|
+|ユーザー3|user3@example.com|user1234|紐づく商品無し|
+※ 上記ユーザーは、READMEの「環境構築」手順に従って `php artisan db:seed` を実行すると自動的にシーディングされます。
 
 ## PHPUnit テストの実行方法（当プロジェクト用）
 

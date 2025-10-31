@@ -10,22 +10,51 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class ItemsSeeder extends Seeder
 {
     public function run()
     {
-        $users = User::all();
-        // 既存ユーザーがいない場合は作成
-        if ($users->isEmpty()) {
-            $users = User::factory()->count(3)->create();
-        }
+        // ユーザー1,2をメールで取得（無ければ作成）
+        $seller1 = User::firstOrCreate(
+            ['email' => 'user1@example.com'],
+            [
+                'name' => 'ユーザー1',
+                'password' => Hash::make('user1234'),
+                'postal_code' => '1000001',
+                'address' => '東京都千代田区千代田1-1',
+                'building' => '皇居ビル101',
+                'image_filename' => 'user1.png',
+                'email_verified_at' => Carbon::now(),
+            ]
+        );
+
+        $seller2 = User::firstOrCreate(
+            ['email' => 'user2@example.com'],
+            [
+                'name' => 'ユーザー2',
+                'password' => Hash::make('user1234'),
+                'postal_code' => '1500001',
+                'address' => '東京都渋谷区神宮前1-1-1',
+                'building' => '渋谷タワー502',
+                'image_filename' => 'user2.png',
+                'email_verified_at' => Carbon::now(),
+            ]
+        );
+
+        // items.php での user_id=1/2 を実IDへマッピング
+        $idMap = [
+            1 => $seller1->id,
+            2 => $seller2->id,
+        ];
 
         $items = $this->getItems();
 
         foreach ($items as $itemData) {
-            $randomUser = $users->random(1)->first();
-            $this->seedItem($itemData, $randomUser);
+            $sellerId = $idMap[$itemData['user_id']];
+            $this->seedItem($itemData, $sellerId);
         }
     }
 
@@ -34,7 +63,7 @@ class ItemsSeeder extends Seeder
         return require database_path('data/items.php');
     }
 
-    private function seedItem(array $itemData, User $user): void
+    private function seedItem(array $itemData, int $sellerId): void
     {
         $condition = ItemCondition::firstOrCreate(['name' => $itemData['condition']]);
 
@@ -45,7 +74,7 @@ class ItemsSeeder extends Seeder
         $item->description = $itemData['description'];
         $item->price = $itemData['price'];
         $item->item_condition_id = $condition->id;
-        $item->seller_id = $user->id;
+        $item->seller_id = $sellerId;
         $item->image_filename = ''; // NOT NULL 対策
         $item->save();
 
