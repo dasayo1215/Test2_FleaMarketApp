@@ -40,7 +40,6 @@ services:
 
     mail:
         image: mailhog/mailhog
-        container_name: mailhog
         ports:
             - "8025:8025"
             - "1025:1025"
