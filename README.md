@@ -205,6 +205,7 @@ MAIL_ENCRYPTION=null
 ## ダミーユーザー
 - 本アプリには、以下の3名のユーザーを用意しています（メール認証済み）。
 |名前|Eメール|パスワード|備考|
+|---|---|---|---|
 |ユーザー1|user1@example.com|user1234|**CO01〜CO05** の出品者|
 |ユーザー2|user2@example.com|user1234|**CO06〜CO10** の出品者|
 |ユーザー3|user3@example.com|user1234|紐づく商品無し|
