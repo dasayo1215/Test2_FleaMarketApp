@@ -7,6 +7,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\TradeRoomController;
+use App\Http\Controllers\TradeMessageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,6 +47,10 @@ Route::middleware(['auth', 'verified'])->group(function(){
     Route::post('/mypage/profile/image', [UserController::class, 'uploadProfileImage']);
     Route::post('/item/{itemId}/comment', [ItemController::class, 'storeComment'])->name('comment');
     Route::post('/item/{itemId}/like', [ItemController::class, 'toggleLike'])->name('like');
+
+    // 取引ルーム関係
+    Route::get('/trades/{roomId}', [TradeRoomController::class, 'show'])->name('trade.rooms.show');
+    Route::post('/trade/{roomId}/messages', [TradeMessageController::class, 'store'])->name('trade.messages.store');
 
     // Stripe関係
     Route::get('/payment-success', [PurchaseController::class, 'showSuccess'])->name('payment.success');

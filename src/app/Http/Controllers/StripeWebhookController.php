@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Purchase;
+use App\Models\TradeRoom;
 
 class StripeWebhookController extends Controller
 {
@@ -58,6 +59,12 @@ class StripeWebhookController extends Controller
                 ]);
 
                 Log::info("purchase_id {$purchaseId} を paid として更新");
+
+                // 支払い確定タイミングで取引ルームを一意に作成（既にあれば取得）
+                TradeRoom::firstOrCreate([
+                    'purchase_id' => $purchase->id,
+                ]);
+
                 break;
 
             case 'payment_intent.payment_failed':

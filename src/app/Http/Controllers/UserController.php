@@ -14,9 +14,11 @@ class UserController extends Controller
     public function showProfile(Request $request){
         $page = $request->query('page');
 
-        if($page === 'buy'){
+        if ($page === 'buy') {
             return $this->showPurchasedItems();
-        }else{
+        } elseif ($page === 'trade') {
+            return $this->showTradingItems();
+        } else {
             return $this->showListedItems();
         }
     }
@@ -41,6 +43,25 @@ class UserController extends Controller
         ->get();
         return view('users.show', compact('items', 'user'));
     }
+
+public function showTradingItems()
+{
+    $user = Auth::user();
+
+    $items = Item::query()
+        // 自分が関与している取引（出品者 or 購入者）
+        ->where(function ($q) use ($user) {
+            $q->where('seller_id', $user->id)
+                ->orWhereHas('purchase', fn($qq) => $qq->where('buyer_id', $user->id));
+        })
+        // 取引中：支払い済み（paid_atあり）
+        ->whereHas('purchase', fn($q) => $q->whereNotNull('paid_at'))
+        ->with('purchase')
+        ->latest()
+        ->get();
+
+    return view('users.show', compact('items', 'user'));
+}
 
     public function editProfile(){
         $user = Auth::user();

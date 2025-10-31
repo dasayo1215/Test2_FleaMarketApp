@@ -38,4 +38,8 @@ class Purchase extends Model
     public function user() {
         return $this->belongsTo(User::class, 'buyer_id');
     }
+
+    public function tradeRoom() {
+        return $this->hasOne(TradeRoom::class, 'purchase_id', 'id');
+    }
 }
