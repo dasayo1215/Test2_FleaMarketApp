@@ -6,3 +6,5 @@
 !users/
 items/
 tmp/
+!trade_messages/
+!trade_messages/.gitignore
