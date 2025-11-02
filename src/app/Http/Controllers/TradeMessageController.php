@@ -23,7 +23,7 @@ class TradeMessageController extends Controller
         // 画像があれば保存（storage/app/public/trade_messages 配下）
         $filename = null;
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('trade_messages', 'public'); // ex) trade_messages/abc123.jpeg
+            $path = $request->file('image')->store('trade_messages', 'public');
             $filename = basename($path); // DBにはファイル名のみを保存
         }
 
@@ -50,7 +50,6 @@ class TradeMessageController extends Controller
 
     public function uploadImage(UploadImageRequest $request)
     {
-        // ここまで来たら画像は有効（422は自動でJSONエラー返却）
         return response()->json(['ok' => true]);
     }
 
@@ -71,7 +70,6 @@ class TradeMessageController extends Controller
             abort(403, 'You can edit only your messages.');
         }
 
-        // テキストのみ更新（画像の扱いは今回はOFF。差し替えもしたいならここで同様にstore処理を追加）
         $msg->message = $request->input('message', '');
         $msg->save();
 
@@ -101,7 +99,6 @@ class TradeMessageController extends Controller
             abort(403, 'You can delete only your messages.');
         }
 
-        // 画像ファイルも消す（あれば）
         if ($msg->image_filename) {
             Storage::disk('public')->delete('trade_messages/'.$msg->image_filename);
         }
