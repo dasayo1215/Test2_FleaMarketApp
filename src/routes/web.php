@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\TradeRoomController;
 use App\Http\Controllers\TradeMessageController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,8 +50,29 @@ Route::middleware(['auth', 'verified'])->group(function(){
     Route::post('/item/{itemId}/like', [ItemController::class, 'toggleLike'])->name('like');
 
     // 取引ルーム関係
-    Route::get('/trades/{roomId}', [TradeRoomController::class, 'show'])->name('trade.rooms.show');
-    Route::post('/trade/{roomId}/messages', [TradeMessageController::class, 'store'])->name('trade.messages.store');
+    Route::prefix('trades')->group(function () {
+        // チャット画面
+        Route::get('{roomId}', [TradeRoomController::class, 'show'])
+            ->name('trade.show');
+
+        // メッセージ投稿
+        Route::post('{roomId}/messages', [TradeMessageController::class, 'store'])
+            ->name('trade.messages.store');
+
+        // 画像バリデーション
+        Route::post('{roomId}/messages/image-validate', [TradeMessageController::class, 'uploadImage'])
+            ->name('trade.messages.image_validate');
+
+        // メッセージ更新・削除
+        Route::patch('{roomId}/messages/{messageId}', [TradeMessageController::class, 'update'])
+            ->name('trade.messages.update');
+        Route::delete('{roomId}/messages/{messageId}', [TradeMessageController::class, 'destroy'])
+            ->name('trade.messages.destroy');
+
+        // レビュー投稿
+        Route::post('{roomId}/reviews', [ReviewController::class, 'store'])
+            ->name('trade.reviews.store');
+    });
 
     // Stripe関係
     Route::get('/payment-success', [PurchaseController::class, 'showSuccess'])->name('payment.success');

@@ -13,6 +13,7 @@ class CreateTradeMessagesTable extends Migration
             $table->foreignId('trade_room_id')->constrained('trade_rooms')->onDelete('cascade');
             $table->foreignId('sender_id')->constrained('users');
             $table->text('message');
+            $table->string('image_filename')->nullable();
             $table->timestamps();
 
             // 取引ルームID＋作成日時のインデックス

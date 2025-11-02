@@ -6,9 +6,12 @@
 
 @section('content')
     <div class="page">
-        <a class="page-recommend {{ $page !== 'mylist' ? 'page-active' : '' }}" href="{{ route('index', ['page' => null, 'keyword' => request('keyword')]) }}">おすすめ</a>
-        <a class="page-mylist {{ $page === 'mylist' ? 'page-active' : '' }}" href="{{ route('index', ['page' => 'mylist', 'keyword' => request('keyword')]) }}">マイリスト</a>
+        <a class="page-recommend {{ $page !== 'mylist' ? 'page-active' : '' }}"
+            href="{{ route('index', ['page' => null, 'keyword' => request('keyword')]) }}">おすすめ</a>
+        <a class="page-mylist {{ $page === 'mylist' ? 'page-active' : '' }}"
+            href="{{ route('index', ['page' => 'mylist', 'keyword' => request('keyword')]) }}">マイリスト</a>
     </div>
+
     <div class="content-wrapper-small">
         @foreach ($items as $item)
             <a class="item-container-link" href="{{ url('/item/' . $item->id) }}">
@@ -28,4 +31,12 @@
             <div class="item-container-empty"></div>
         @endfor
     </div>
-@endsection('content')
+@endsection
+
+@section('scripts')
+    @if (request('flash') === 'review_done')
+        <script>
+            alert('評価が完了しました');
+        </script>
+    @endif
+@endsection

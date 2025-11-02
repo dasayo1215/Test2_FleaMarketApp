@@ -14,9 +14,22 @@
     padding-top: 50px;
 }
 
+.profile-info
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .username {
-    margin-left: 50px;
-    margin-right: 200px;
+    margin: 0 200px 10px 30px;
+}
+
+.rating-stars {
+    margin-left: 30px;
+    display: block;
+    width: 120px;
+    height: auto;
 }
 
 .image-circle {
@@ -101,4 +114,34 @@
     font-weight: bold;
     border-radius: 5px;
     z-index: 10;
+}
+
+.badge-unread {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 9999px;
+    background: #ff2f2f;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 20px;
+    text-align: center;
+}
+
+.badge-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9999px;
+    background: #ff2f2f;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
 }

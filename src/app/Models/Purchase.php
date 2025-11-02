@@ -42,4 +42,8 @@ class Purchase extends Model
     public function tradeRoom() {
         return $this->hasOne(TradeRoom::class, 'purchase_id', 'id');
     }
+
+    public function reviews() {
+        return $this->hasMany(Review::class);
+    }
 }

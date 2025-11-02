@@ -27,14 +27,38 @@
     display: grid;
     gap: 18px;
 }
+
 .trade-sidebar-btn {
-    width: 100%;
-    height: 36px;
+    display: block;               /* インライン要素→ブロック化 */
+    width: 100%;                  /* サイドバー内いっぱいに */
+    height: 36px;                 /* 高さ固定 */
+    line-height: 36px;            /* 縦方向の中央揃え */
     background: #d9d9d9;
-    color: black;
-    border: none;
+    color: #000;
     border-radius: 6px;
+    text-align: center;           /* 文字を中央寄せ */
+    text-decoration: none;        /* アンダーライン除去 */
     cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+/* hoverで軽いフィードバック */
+.trade-sidebar-btn:hover {
+    background: #cfcfcf;
+    transform: translateY(-1px);
+}
+
+/* 選択中（is-active）の見た目 */
+.trade-sidebar-btn.is-active {
+    background: #bfbfbf;
+    font-weight: 700;
+    outline: 2px solid #333;
+}
+
+.trade-sidebar-empty {
+    text-align: center;
+    font-size: 12px;
+    color: #fff;
 }
 
 .trade-main {
@@ -73,6 +97,16 @@
     cursor: pointer;
 }
 
+.trade-waiting-review {
+    border: 1px solid #ff5555;
+    padding: 8px 14px;
+    margin: 0;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #ff5555;
+}
+
 /* 商品行 */
 .trade-item {
     display: grid;
@@ -90,12 +124,12 @@
     justify-content: center;
 }
 .trade-item-name {
-    font-size: 40px;
+    font-size: 30px;
     font-weight: 900;
-    margin: 16px 0 8px;
+    margin: 16px 0 16px;
 }
 .trade-item-price {
-    font-size: 28px;
+    font-size: 25px;
     font-weight: 700;
     margin: 0;
 }
@@ -143,14 +177,35 @@
 }
 
 .msg-bubble {
-    font-size: 18px;
-    width: 80%;
+    display: inline-block;
+    max-width: 75vw;
+    padding: 12px 14px;
     background: #d9d9d9;
     border-radius: 6px;
-    display: flex;
-    align-items: center;
-    padding: 8px 12px;
+    line-height: 1.6;
     box-sizing: border-box;
+}
+
+.msg-text {
+    white-space: normal;
+    word-break: break-word;
+}
+
+.msg-image-wrap {
+    margin-top: 8px;
+}
+
+.msg-bubble > .msg-image-wrap:first-child {
+    margin-top: 0;
+}
+
+.msg-image {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    border-radius: 6px;
+    object-fit: contain;
 }
 
 .msg-ops {
@@ -177,14 +232,24 @@
 
 /* 入力欄 */
 .composer {
-    display: grid;
-    grid-template-columns: 1fr 120px 44px;
-    gap: 12px;
     position: sticky;
     bottom: 0;
     background: #fff;
-    padding: 25px 25px 25px;
+    padding: 15px 25px 25px;
 }
+
+.composer-error {
+    color: rgb(255, 85, 85);
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.composer-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 120px 44px;
+    gap: 12px;
+}
+
 .composer-input {
     height: 40px;
     border: 2px solid #d9d9d9;
@@ -202,6 +267,12 @@
     cursor: pointer;
 }
 
+.composer-image.is-locked {
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: none;
+}
+
 .composer-send {
     background: none;
     border: none;
@@ -215,4 +286,82 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
+}
+
+/* --- review modal --- */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    z-index: 1;
+}
+.modal.is-open { display: block; }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.4); }
+.modal-panel {
+    position: relative;
+    width: min(500px, 80vw);
+    margin: 30vh auto 0;
+    background: #fdfce6;
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,.2);
+    border: #000 solid 1px;
+}
+
+.modal-title {
+    font-size: 25px;
+    padding: 20px;
+    border-bottom: #000 solid 1px;
+}
+
+.modal-sub {
+    color: #555;
+    padding: 10px 20px 10px;
+    margin: 0;
+}
+
+.stars {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    margin: 6px 0 15px;
+    border-bottom: #000 solid 1px;
+}
+
+.star {
+    font-size: 60px;
+    color: #868686;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+}
+
+.star.is-on {
+    color: #FFD23F;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.modal-btn {
+    height: 36px;
+    padding: 0 14px;
+    margin: 0 20px 15px;
+    border-radius: 8px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    background: #ff6b6b;
+    color: #fff;
+}
+
+.modal-btn[disabled] {
+    opacity: .6;
+    cursor: not-allowed;
 }

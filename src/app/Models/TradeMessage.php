@@ -13,6 +13,7 @@ class TradeMessage extends Model
         'trade_room_id',
         'sender_id',
         'message',
+        'image_filename',
     ];
 
     public function room()

@@ -11,7 +11,15 @@
         @else
             <div class="image-circle"></div>
         @endif
-        <h2 class="username">{{ $user->name }}</h2>
+        <div class="profile-info">
+            <h2 class="username">{{ $user->name }}</h2>
+
+            @if (!empty($ratingCount) && $ratingCount > 0 && !empty($ratingAvgRounded))
+                <img class="rating-stars" src="{{ asset('storage/assets/rate' . $ratingAvgRounded . '.png') }}"
+                    alt="評価 {{ $ratingAvgRounded }} / 5（{{ $ratingCount }}件）">
+            @endif
+        </div>
+
         <a class="edit-profile" href="/mypage/profile">プロフィールを編集</a>
     </div>
 
@@ -19,21 +27,39 @@
         @php
             $activePage = request('page') ?? 'sell';
             $isTrade = $activePage === 'trade';
+
+            // 未定義なら空配列にして安全に扱う
+            $unreadByRoom = $unreadByRoom ?? [];
+
+            // 配列/コレクションどちらでも安全に合計
+            $totalUnread = is_array($unreadByRoom)
+                ? array_sum($unreadByRoom)
+                : ($unreadByRoom instanceof \Illuminate\Support\Collection
+                    ? $unreadByRoom->sum()
+                    : 0);
         @endphp
-        <a class="page-sell {{ $activePage === 'sell' ? 'page-active' : '' }}" href="{{ url('/mypage?page=sell') }}">出品した商品</a>
+
+        <a class="page-sell {{ $activePage === 'sell' ? 'page-active' : '' }}"
+            href="{{ url('/mypage?page=sell') }}">出品した商品</a>
+
         <a class="page-buy {{ $activePage === 'buy' ? 'page-active' : '' }}" href="{{ url('/mypage?page=buy') }}">購入した商品</a>
-        <a class="page-trade {{ $activePage === 'trade' ? 'page-active' : '' }}"
-            href="{{ url('/mypage?page=trade') }}">取引中の商品</a>
+
+        <a class="page-trade {{ $activePage === 'trade' ? 'page-active' : '' }}" href="{{ url('/mypage?page=trade') }}">
+            取引中の商品
+            @if (($totalUnread ?? 0) > 0)
+                <span class="badge-tab">{{ $totalUnread }}</span>
+            @endif
+        </a>
     </div>
+
     <div class="profile-wrapper">
         @foreach ($items as $item)
             @php
                 // tradeタブのときは取引チャット画面へリンク
                 // purchase -> tradeRoom が存在する場合のみリンク生成
                 $roomId = optional(optional($item->purchase)->tradeRoom)->id;
-                $link = $isTrade && $roomId
-                    ? route('trade.rooms.show', ['roomId' => $roomId])
-                    : url('/item/' . $item->id);
+                $link = $isTrade && $roomId ? route('trade.show', ['roomId' => $roomId]) : url('/item/' . $item->id);
+                $unread = $isTrade ? $unreadByRoom[$roomId] ?? 0 : 0;
             @endphp
 
             <a class="item-container-link" href="{{ $link }}">
@@ -42,6 +68,10 @@
                         alt="{{ $item->name }}">
                     @if (!$isTrade && $item->purchase && $item->purchase->completed_at !== null)
                         <div class="sold-label">Sold</div>
+                    @endif
+
+                    @if ($isTrade && $unread > 0)
+                        <span class="badge-unread">{{ $unread }}</span>
                     @endif
                     <div class="item-name">{{ $item->name }}</div>
                 </div>
