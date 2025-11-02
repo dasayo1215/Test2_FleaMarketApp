@@ -288,8 +288,7 @@ npm run test:safari
 - その他の取引では、各商品を「最新メッセージの送信時刻が新しい順（＝新規メッセージが来た順）」に上から表示しています。メッセージのやり取りが一度も行われていない商品については、ソート基準となる時刻が存在しないため、一覧の末尾に表示されます。
 
 ## ER図
-![Case1 drawio](https://github.com/user-attachments/assets/1bcdbaa6-310f-47af-944f-19104026ab87)
-
+<img width="1251" height="991" alt="Case1 drawio" src="https://github.com/user-attachments/assets/243cadee-3a27-4b72-998d-f7e887ba3fb9" />
 
 ## 画面例
 ### 商品一覧画面
