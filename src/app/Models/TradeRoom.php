@@ -25,17 +25,23 @@ class TradeRoom extends Model
         return $this->hasMany(TradeMessage::class);
     }
 
-    public function scopeInvolvingUser($q, int $userId)
+    public function scopeInvolvingUser($query, int $userId)
     {
-        return $q->whereHas('purchase', function ($qq) use ($userId) {
-            $qq->where('buyer_id', $userId)
-            ->orWhereHas('item', fn($qi) => $qi->where('seller_id', $userId));
+        return $query->whereHas('purchase', function ($purchaseQuery) use ($userId) {
+            $purchaseQuery
+                ->where('buyer_id', $userId)
+                ->orWhereHas('item', function ($itemQuery) use ($userId) {
+                    $itemQuery->where('seller_id', $userId);
+                });
         });
     }
 
-    public function scopeActive($q)
+    public function scopeActive($query)
     {
-        return $q->whereHas('purchase', fn($p) => $p->whereNotNull('paid_at'))
-                ->has('purchase.reviews','<',2);
+        return $query
+            ->whereHas('purchase', function ($purchaseQuery) {
+                $purchaseQuery->whereNotNull('paid_at');
+            })
+            ->has('purchase.reviews', '<', 2);
     }
 }
