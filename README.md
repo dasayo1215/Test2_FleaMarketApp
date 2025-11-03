@@ -17,56 +17,33 @@ coachtechフリマ
 - フロントエンド：一部JavaScript（ES6相当のバニラJS） を使用（画像の非同期アップロード処理など）
 
 ## 環境構築
+本アプリでは、stripeのwebhook機能で支払い完了通知を受け取ったあと、取引チャット画面に進める仕様です。<br>そのため、アプリの全機能（支払い～取引チャット含め）を確認するには、以下の①～④の手順をすべて完了する必要があります。
 
-### リポジトリのクローンと Docker ビルド
+### ①リポジトリのクローンと Docker ビルド
 - DockerDesktopアプリを立ち上げ、下記を実行してください。
 ```
-git clone git@github.com:dasayo1215/Case1_FleaMarketApp.git
-cd Case1_FleaMarketApp
-docker-compose up -d --build
-```
-*MySQLは、OSによって起動しない場合があるのでそれぞれのPCに合わせてdocker-compose.ymlファイルを編集してください。
-
-### Laravel環境構築
-```
-docker-compose exec php bash
-```
-- Laravelコンテナ内で以下を実行します：
-```
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan storage:link
-php artisan migrate
-php artisan db:seed
-```
-#### （任意）キャッシュクリアや設定の最適化
-
-```bash
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+git clone git@github.com:dasayo1215/Test2_FleaMarketApp.git
+cd Test2_FleaMarketApp
+make setup
 ```
 
-### ログファイルと書き込み権限の設定
-```bash
-# ログファイルを手動で作成（存在しない場合）
-touch src/storage/logs/laravel.log
+以下が自動的に実行されます。
+- Docker イメージのビルド・起動
+- Laravel のセットアップ（composer install / .env 生成 / key:generate）
+- ストレージリンク作成
+- マイグレーションと初期データ投入（php artisan migrate --seed）
+- キャッシュ最適化（php artisan optimize）
+- ログ・権限設定（storage, bootstrap/cache）
 
-# 所有者をWebサーバーに変更
-sudo chown -R www-data:www-data src/storage
+完了後、ブラウザで以下にアクセスできます。
+- アプリ本体： http://localhost
+- MailHog（メール確認用）： http://localhost:8025
 
-# 一時的な対処として全体に書き込み権限を付与（開発環境のみ）
-sudo chmod -R 777 src/*
-```
+### ②Stripe の設定
 
-※ chmod 777 はセキュリティリスクがあるため、本番環境では適切なユーザーとグループ権限の設定を推奨します。
-
-### Stripe の設定について
-
-1. [Stripe](https://dashboard.stripe.com/register)でアカウントを作成してください（テストモードでOK）。
+1. [Stripe](https://dashboard.stripe.com/register)でアカウントを作成してください（テストモード可）。
 2. ダッシュボードからAPIキー（公開可能キーとシークレットキー）を取得してください。
-3. プロジェクトの `.env` ファイルに以下の環境変数を追加します。
+3.  `.env` に以下の環境変数を追加します。
 （STRIPE_KEYに公開可能キー、STRIPE_SECRETにシークレットキー）
 
 ```env
@@ -76,10 +53,10 @@ STRIPE_SECRET=sk_test_xxxxxxxxxxxxxxxxxxxxx
 
 ※　`.env` はGit管理から除外しています。APIキーは絶対に公開しないよう注意してください。
 
-### ngrok と webhook の設定について
+### ③ngrok と webhook の設定
 
-支払いテストの実行のため、ngrokを利用します。
-※あくまで開発専用で、本番環境では使わないようにしてください。
+Webhook を利用して Stripe から支払い結果を受信します。
+以下の手順で ngrok を設定してください（開発専用）。
 
 #### 事前準備：ngrokのインストール
 
@@ -87,7 +64,7 @@ STRIPE_SECRET=sk_test_xxxxxxxxxxxxxxxxxxxxx
 2. 公式サイトの「Setup & Installation」セクションに従い、OSに合った方法でngrokをインストールしてください。
 （Homebrew、またはzipファイルを直接ダウンロードして展開 など）
 ※zipファイルからインストールした場合は、必要に応じてngrokの実行ファイルがあるフォルダをPATHに追加してください。
-4. 公式サイトに従い、ターミナルで以下コマンドを実行し、ngrokにアカウントの認証情報（Authtoken）を設定します。
+3. 公式サイトに従い、ターミナルで以下コマンドを実行し、ngrokにアカウントの認証情報（Authtoken）を設定します。
 
 ```bash
 ngrok config add-authtoken YOUR_AUTHTOKEN
@@ -123,10 +100,9 @@ Forwarding  https://3092-xx-xx-xx.ngrok-free.app -> http://localhost:80
 ※「送信先名」などの項目は任意で入力してください。
 以上で送信先の設定が完了します。
 
-7. テストが終わったら、Ctrl+Cなどでトンネルを停止してください。
-※次回再度使用する場合は ngrok http 80 を実行して、新しいURLを取得しなおしてください。
+※ngrok は再起動するたびにURLが変わるため、Webhook URL も更新が必要です。
 
-### Stripe CLI 設定について
+### ④Stripe CLI 設定
 
 #### 1. Stripe CLI のログイン
 ```bash
@@ -140,7 +116,7 @@ docker-compose logs stripe-cli
 ```
 - 以下のようなログが表示され、Webhook署名キー（whsec_xxx...）が確認できます：
 ```bash
-stripe-cli  | Ready! You are using Stripe API Version [2025-04-30.basil]. 
+stripe-cli  | Ready! You are using Stripe API Version [2025-04-30.basil].
 stripe-cli  | Your webhook signing secret is whsec_xxxxxxxxxxxxxxxxxxxxx (^C to quit)
 ```
 
@@ -154,7 +130,7 @@ STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxx
 
 - CLIの設定ファイルは `~/.config/stripe/config.toml` にあります。
 - `test_mode_api_key` は `.env` の `STRIPE_SECRET` と同じ値にしてください。
-##### 編集できない場合は、権限を確認し、必要に応じて以下のコマンドで権限を付与してください。
+- 編集できない場合は、権限を確認し、必要に応じて以下のコマンドで権限を付与してください。
 ```bash
 sudo chmod u+w ~/.config/stripe/config.toml
 nano ~/.config/stripe/config.toml
@@ -168,22 +144,14 @@ docker-compose restart stripe-cli
 - `.env` の `STRIPE_SECRET` と`config.toml`の`test_mode_api_key`は必ず一致させてください。
 - 本番環境の Webhook も受信するため、`whsec` が異なることによる署名検証エラーが Stripe ダッシュボード上やログに表示される場合がありますが、無視して構いません。
 
-### MailHog の利用について（操作不要）
+### 終了時
 
-- メール送信機能の動作確認はMailHogのWeb UI（ http://localhost:8025/ ）で行います。
-- Laravelの `.env` にメール送信設定は以下のようにしてあります。
-
-```env
-MAIL_MAILER=smtp
-MAIL_HOST=mailhog
-MAIL_PORT=1025
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_ENCRYPTION=null
+作業が終わったら以下を実行してください。
+```bash
+make stop
 ```
-
-- これにより、ローカルのメール送信はMailHog経由となり、実際に外部には送信されません。
-- メール認証や通知メールを受け取ったかどうかは、MailHogのUIで確認できます。
+- 全コンテナを停止します（データは保持されます）。
+- ngrokはCtrl+Cで個別停止してください。
 
 ## 支払いテストについて
 
@@ -258,6 +226,16 @@ php artisan test tests/Feature
 - 誤って .env の本番DBを使わないよう注意してください。
 
 ## その他
+### マイページについて
+- 「購入した商品」タブから商品をクリックした場合、取引中であっても商品詳細画面に遷移します。
+- 「取引中の商品」タブから商品をクリックした場合のみ、取引チャット画面に遷移します。
+- 「取引中の商品」タブでは、各商品を「最新メッセージの送信時刻が新しい順（＝新規メッセージが来た順）」に左上から表示しています。メッセージのやり取りが一度も行われていない商品については、ソート基準となる時刻が存在しないため、一覧の末尾に表示されます。
+
+### 取引チャット画面について：
+- メッセージの編集機能は、本文のみを対象としています。
+- メッセージの削除機能では、本文・画像とも削除することができます。
+- その他の取引では、各商品を「最新メッセージの送信時刻が新しい順（＝新規メッセージが来た順）」に上から表示しています。メッセージのやり取りが一度も行われていない商品については、ソート基準となる時刻が存在しないため、一覧の末尾に表示されます。
+
 ### Seederに関する補足：
 - ItemsSeederにおいて、指定してあるダミーの商品データにカテゴリー情報を追加しました。
 - UsersSeeder は現在 100人のユーザー を作成しますが、将来的に1,000人規模のユーザー数を想定し、テストにてそのパフォーマンス確認も実施済みです。
@@ -277,15 +255,20 @@ php artisan test tests/Feature
 npm run test:safari
 ```
 
-### マイページについて
-- 「購入した商品」タブから商品をクリックした場合、取引中であっても商品詳細画面に遷移します。
-- 「取引中の商品」タブから商品をクリックした場合のみ、取引チャット画面に遷移します。
-- 「取引中の商品」タブでは、各商品を「最新メッセージの送信時刻が新しい順（＝新規メッセージが来た順）」に左上から表示しています。メッセージのやり取りが一度も行われていない商品については、ソート基準となる時刻が存在しないため、一覧の末尾に表示されます。
+### MailHog の利用について（操作不要）
+- メール送信機能の動作確認はMailHogのWeb UI（ http://localhost:8025/ ）で行います。
+- これにより、ローカルのメール送信はMailHog経由となり、実際に外部には送信されません。
+- メール認証や通知メールを受け取ったかどうかは、MailHogのUIで確認できます。
+- Laravelの `.env` にメール送信設定は以下のようにしてあります。
 
-### 取引チャット画面について：
-- メッセージの編集機能は、本文のみを対象としています。
-- メッセージの削除機能では、本文・画像とも削除することができます。
-- その他の取引では、各商品を「最新メッセージの送信時刻が新しい順（＝新規メッセージが来た順）」に上から表示しています。メッセージのやり取りが一度も行われていない商品については、ソート基準となる時刻が存在しないため、一覧の末尾に表示されます。
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+```
 
 ## ER図
 <img width="1251" height="991" alt="Case1 drawio" src="https://github.com/user-attachments/assets/243cadee-3a27-4b72-998d-f7e887ba3fb9" />
