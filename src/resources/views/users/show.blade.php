@@ -28,10 +28,8 @@
             $activePage = request('page') ?? 'sell';
             $isTrade = $activePage === 'trade';
 
-            // 未定義なら空配列にして安全に扱う
             $unreadByRoom = $unreadByRoom ?? [];
 
-            // 配列/コレクションどちらでも安全に合計
             $totalUnread = is_array($unreadByRoom)
                 ? array_sum($unreadByRoom)
                 : ($unreadByRoom instanceof \Illuminate\Support\Collection
@@ -55,8 +53,7 @@
     <div class="profile-wrapper">
         @foreach ($items as $item)
             @php
-                // tradeタブのときは取引チャット画面へリンク
-                // purchase -> tradeRoom が存在する場合のみリンク生成
+                // tradeタブのときは取引チャット画面へリンク(tradeRoom が存在する場合のみリンク生成)
                 $roomId = optional(optional($item->purchase)->tradeRoom)->id;
                 $link = $isTrade && $roomId ? route('trade.show', ['roomId' => $roomId]) : url('/item/' . $item->id);
                 $unread = $isTrade ? $unreadByRoom[$roomId] ?? 0 : 0;

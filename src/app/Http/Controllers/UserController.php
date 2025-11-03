@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Item;
 use App\Models\Review;
+use App\Models\TradeRoom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\ProfileRequest;
@@ -105,18 +106,27 @@ class UserController extends Controller
 
     private function activeRoomIds(int $userId): array
     {
-        $buyer = DB::table('trade_rooms as r')->join('purchases as p','p.id','=','r.purchase_id')
-            ->where('p.buyer_id',$userId)->whereNotNull('p.paid_at')
-            ->whereRaw('(select count(*) from reviews rv where rv.purchase_id=p.id) < 2')
-            ->pluck('r.id')->all();
+        $allActiveIds = TradeRoom::query()
+            ->involvingUser($userId)
+            ->active()
+            ->pluck('id')
+            ->all();
 
-        $seller = DB::table('trade_rooms as r')->join('purchases as p','p.id','=','r.purchase_id')
-            ->join('items as i','i.id','=','p.item_id')
-            ->where('i.seller_id',$userId)->whereNotNull('p.paid_at')
-            ->whereRaw('(select count(*) from reviews rv where rv.purchase_id=p.id) < 2')
-            ->pluck('r.id')->all();
+        $rooms = TradeRoom::with([
+                'purchase:id,buyer_id,item_id',
+                'purchase.item:id,seller_id'
+            ])
+            ->whereIn('id', $allActiveIds)
+            ->get(['id','purchase_id']);
 
-        return [$buyer,$seller];
+        $buyerRoomIds  = [];
+        $sellerRoomIds = [];
+        foreach ($rooms as $r) {
+            if ($r->purchase->buyer_id === $userId)            $buyerRoomIds[]  = $r->id;
+            if ($r->purchase->item->seller_id === $userId)     $sellerRoomIds[] = $r->id;
+        }
+
+        return [$buyerRoomIds, $sellerRoomIds];
     }
 
     public function editProfile()

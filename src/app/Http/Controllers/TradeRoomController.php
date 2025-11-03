@@ -89,16 +89,10 @@ class TradeRoomController extends Controller
                 'purchase.item:id,name,seller_id',
                 'purchase.item.user:id,name',
             ])
-            ->withMax('messages as last_msg_at', 'created_at')
+            ->involvingUser($user->id)   // ← 当事者のみ
+            ->active()                   // ← 支払い済み & レビュー未完了
             ->where('id', '!=', $roomId)
-            ->whereHas('purchase', function ($q) use ($user) {
-                $q->whereNotNull('paid_at')
-                    ->where(function ($qq) use ($user) {
-                        $qq->where('buyer_id', $user->id)
-                            ->orWhereHas('item', fn($qi) => $qi->where('seller_id', $user->id));
-                    });
-            })
-            ->has('purchase.reviews', '<', 2)
+            ->withMax('messages as last_msg_at', 'created_at')
             ->orderByDesc(DB::raw("COALESCE(last_msg_at, '1970-01-01 00:00:00')"))
             ->get()
             ->map(fn($r) => [

@@ -7,6 +7,7 @@ use App\Models\TradeMessage;
 use App\Http\Requests\StoreTradeMessageRequest;
 use App\Http\Requests\UploadImageRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class TradeMessageController extends Controller
 {
@@ -82,7 +83,7 @@ class TradeMessageController extends Controller
         ]);
     }
 
-    public function destroy(\Illuminate\Http\Request $request, $roomId, $messageId)
+    public function destroy(Request $request, $roomId, $messageId)
     {
         $room = TradeRoom::with('purchase.item')->findOrFail($roomId);
 

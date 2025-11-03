@@ -17,7 +17,7 @@ coachtechフリマ
 - フロントエンド：一部JavaScript（ES6相当のバニラJS） を使用（画像の非同期アップロード処理など）
 
 ## 環境構築
-本アプリでは、stripeのwebhook機能で支払い完了通知を受け取ったあと、取引チャット画面に進める仕様です。<br>そのため、アプリの全機能（支払い～取引チャット含め）を確認するには、以下の①～④の手順をすべて完了する必要があります。
+本アプリでは、stripeのwebhook機能で支払い完了通知を受け取ったあと、取引チャット画面に進める仕様です。<br>そのため、アプリの全機能（支払い～取引チャット含め）を確認するには、以下の①～③の手順をすべて完了する必要があります。
 
 ### ①リポジトリのクローンと Docker ビルド
 - DockerDesktopアプリを立ち上げ、下記を実行してください。
@@ -51,58 +51,9 @@ STRIPE_KEY=pk_test_xxxxxxxxxxxxxxxxxxxxx
 STRIPE_SECRET=sk_test_xxxxxxxxxxxxxxxxxxxxx
 ```
 
-※　`.env` はGit管理から除外しています。APIキーは絶対に公開しないよう注意してください。
+※ `.env` はGit管理から除外しています。APIキーは絶対に公開しないよう注意してください。
 
-### ③ngrok と webhook の設定
-
-Webhook を利用して Stripe から支払い結果を受信します。
-以下の手順で ngrok を設定してください（開発専用）。
-
-#### 事前準備：ngrokのインストール
-
-1. [ngrok公式サイト](https://ngrok.com/)にアクセスし、無料アカウントを作成してください。
-2. 公式サイトの「Setup & Installation」セクションに従い、OSに合った方法でngrokをインストールしてください。
-（Homebrew、またはzipファイルを直接ダウンロードして展開 など）
-※zipファイルからインストールした場合は、必要に応じてngrokの実行ファイルがあるフォルダをPATHに追加してください。
-3. 公式サイトに従い、ターミナルで以下コマンドを実行し、ngrokにアカウントの認証情報（Authtoken）を設定します。
-
-```bash
-ngrok config add-authtoken YOUR_AUTHTOKEN
-```
-※Authtoken（上記でいうYOUR_AUTHTOKEN）はngrok公式サイトの「Setup & Installation」セクションで確認できます。
-
-#### ngrokトンネルの起動手順
-1. 以下のコマンドでローカルのポート80番を公開します。
-
-```bash
-ngrok http 80
-```
-
-2. 出力されるURLをコピーしてください。
-
-```nginx
-Forwarding  https://3092-xx-xx-xx.ngrok-free.app -> http://localhost:80
-```
-
-※上記の`https://3092-xx-xx-xx.ngrok-free.app`の部分をコピーします。
-
-3. Stripeダッシュボードの左サイドバーから 「開発者」 > 「Webhook」 にアクセスし、「+ エンドポイントを追加」をクリックします。
-
-4. 「受信するイベントの選択」で以下の3つを選択して「続行」を押下します。
-- checkout.session.async_payment_failed
-- checkout.session.async_payment_succeeded
-- checkout.session.completed
-
-5. 「エンドポイントの設定」画面で、送信先タイプに 「Webhookエンドポイント」 を選択して「続行」を押下します。
-
-6. エンドポイントURLには、手順2でコピーしたURLの末尾に `/webhook/stripe` を付けて入力します。
-例）`https://xxxx.ngrok-free.app/webhook/stripe`
-※「送信先名」などの項目は任意で入力してください。
-以上で送信先の設定が完了します。
-
-※ngrok は再起動するたびにURLが変わるため、Webhook URL も更新が必要です。
-
-### ④Stripe CLI 設定
+### ③Stripe CLI 設定
 
 #### 1. Stripe CLI のログイン
 ```bash
@@ -151,7 +102,6 @@ docker-compose restart stripe-cli
 make stop
 ```
 - 全コンテナを停止します（データは保持されます）。
-- ngrokはCtrl+Cで個別停止してください。
 
 ## 支払いテストについて
 
