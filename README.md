@@ -221,7 +221,7 @@ MAIL_ENCRYPTION=null
 ```
 
 ## ER図
-<img width="1251" height="991" alt="Case1 drawio" src="https://github.com/user-attachments/assets/243cadee-3a27-4b72-998d-f7e887ba3fb9" />
+<img width="1251" height="991" alt="Case1 drawio" src="https://github.com/user-attachments/assets/d1319593-a8a2-4056-b857-b0b5bafa54d6" />
 
 ## 画面例
 ### マイページ（出品した商品タブ）
