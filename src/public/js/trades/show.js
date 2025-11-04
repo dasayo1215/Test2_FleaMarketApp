@@ -17,9 +17,11 @@ function escapeHtml(s) {
     d.textContent = s ?? "";
     return d.innerHTML;
 }
+
 function textToHtml(text) {
     return escapeHtml(text).replace(/\n/g, "<br>");
 }
+
 function htmlToText(html) {
     return (html || "")
         .replace(/<br\s*\/?>/gi, "\n")
@@ -29,6 +31,7 @@ function htmlToText(html) {
         .replace(/&quot;/g, '"')
         .replace(/&#039;/g, "'");
 }
+
 function renderErrors(errors) {
     const el = document.getElementById("trade-message-error");
     if (!el) return;
@@ -37,8 +40,8 @@ function renderErrors(errors) {
     if (Array.isArray(errors?.image)) all.push(...errors.image);
     el.innerHTML = all.length
         ? `<ul class="form-error-list">${all
-            .map((e) => `<li>${escapeHtml(e)}</li>`)
-            .join("")}</ul>`
+              .map((e) => `<li>${escapeHtml(e)}</li>`)
+              .join("")}</ul>`
         : "";
 }
 
@@ -124,8 +127,8 @@ function initComposerState() {
             imgBtn.setAttribute("aria-disabled", "true");
             return;
         }
+        // 不要な見た目クラス（.is-selected）は付与しない
         imgBtn.textContent = selected ? "画像選択済" : "画像を追加";
-        imgBtn.classList.toggle("is-selected", selected);
         imgBtn.classList.remove("is-locked");
         imgBtn.removeAttribute("aria-disabled");
     }
@@ -162,7 +165,7 @@ function initComposerState() {
                 renderErrors({});
             }
         } catch {
-            /* 送信時に最終確認するのでここでは握りつぶし */
+            /* 送信時に最終確認 */
         }
     });
 
@@ -192,7 +195,6 @@ function enterEditMode(messageId, currentHtml, msgEl) {
     const editBtn = msgEl.querySelector(".js-edit");
     if (editBtn) {
         editBtn.textContent = "編集キャンセル";
-        editBtn.classList.add("is-cancel");
     }
     TradeUI.qsa(".js-edit").forEach((btn) => {
         if (btn !== editBtn) btn.disabled = true;
@@ -200,6 +202,7 @@ function enterEditMode(messageId, currentHtml, msgEl) {
     TradeUI.state.editingMsgEl = msgEl;
     input?.focus();
 }
+
 function exitEditMode() {
     const editingIdEl = TradeUI.qs("#editing-message-id");
     const imgBtn = TradeUI.qs("#composer-image-btn");
@@ -217,7 +220,6 @@ function exitEditMode() {
         const editBtn = TradeUI.state.editingMsgEl.querySelector(".js-edit");
         if (editBtn) {
             editBtn.textContent = "編集";
-            editBtn.classList.remove("is-cancel");
         }
     }
     TradeUI.qsa(".js-edit").forEach((btn) => (btn.disabled = false));
@@ -235,7 +237,7 @@ async function onChatClick(e) {
 
     // 編集
     if (editBtn && isRight) {
-        if (editBtn.classList.contains("is-cancel")) {
+        if (TradeUI.state.editingMsgEl === msgEl) {
             exitEditMode();
             return;
         }

@@ -22,6 +22,7 @@ function openReviewModal() {
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden", "false");
 }
+
 function closeReviewModal() {
     const modal = ReviewUI.qs("#review-modal");
     if (!modal) return;
