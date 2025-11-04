@@ -30,16 +30,19 @@ setup: ensure-env
 	$(DC) up -d --build
 	$(MAKE) wait-mysql
 	@echo "==> Laravel setup"
-	$(PHP) bash -lc "cd src && composer install && \
+	$(PHP) bash -lc '\
+		cd /var/www && \
+		composer install && \
 		php artisan key:generate || true && \
 		php artisan storage:link && \
 		php artisan migrate --seed && \
-		php artisan optimize"
+		php artisan optimize'
 	@echo "==> Fixing permissions"
-	$(PHP) bash -lc "mkdir -p src/storage/logs src/bootstrap/cache && \
-		touch src/storage/logs/laravel.log && \
-		chown -R www-data:www-data src/storage src/bootstrap/cache && \
-		chmod -R 777 src/storage src/bootstrap/cache"
+	$(PHP) bash -lc '\
+		mkdir -p /var/www/storage/logs /var/www/bootstrap/cache && \
+		touch /var/www/storage/logs/laravel.log && \
+		chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache && \
+		chmod -R 777 /var/www/storage /var/www/bootstrap/cache'
 	@echo "✅ Setup complete! Visit: http://localhost  (MailHog: http://localhost:8025)"
 
 # ====== 起動 ======
