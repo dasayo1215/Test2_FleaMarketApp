@@ -1,2 +1,3 @@
 docker/mysql/data/*
-!.gitkeep
+!.gitkeepplaywright/
+erd/
