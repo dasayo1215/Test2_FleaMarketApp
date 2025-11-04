@@ -209,10 +209,7 @@ php artisan test tests/Feature
 
 ### 表示確認テストについて：
 - Chrome / Firefox：開発者のPCにインストール済みのブラウザを使用して表示確認を行いました。
-- Safari：playwright ディレクトリ内で以下のコマンドを実行し、表示確認を行いました。
-```bash
-npm run test:safari
-```
+- Safari：playwrightを利用し表示確認を行いました。
 
 ### MailHog の利用について（操作不要）
 - メール送信機能の動作確認はMailHogのWeb UI（ http://localhost:8025/ ）で行います。

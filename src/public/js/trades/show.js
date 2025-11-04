@@ -40,8 +40,8 @@ function renderErrors(errors) {
     if (Array.isArray(errors?.image)) all.push(...errors.image);
     el.innerHTML = all.length
         ? `<ul class="form-error-list">${all
-              .map((e) => `<li>${escapeHtml(e)}</li>`)
-              .join("")}</ul>`
+            .map((e) => `<li>${escapeHtml(e)}</li>`)
+            .join("")}</ul>`
         : "";
 }
 
@@ -127,7 +127,6 @@ function initComposerState() {
             imgBtn.setAttribute("aria-disabled", "true");
             return;
         }
-        // 不要な見た目クラス（.is-selected）は付与しない
         imgBtn.textContent = selected ? "画像選択済" : "画像を追加";
         imgBtn.classList.remove("is-locked");
         imgBtn.removeAttribute("aria-disabled");
@@ -169,11 +168,10 @@ function initComposerState() {
         }
     });
 
-    // 初期状態
     setImageSelectedState(false);
 }
 
-/* --- 編集モード（enter/exit） --- */
+/* --- 編集モード --- */
 function enterEditMode(messageId, currentHtml, msgEl) {
     const input = TradeUI.qs("#trade-message-input");
     const editingIdEl = TradeUI.qs("#editing-message-id");
