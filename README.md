@@ -43,7 +43,7 @@ make setup
 
 1. [Stripe](https://dashboard.stripe.com/register)でアカウントを作成してください（テストモード可）。
 2. ダッシュボードからAPIキー（公開可能キーとシークレットキー）を取得してください。
-3.  `.env` に以下の環境変数を追加します。
+3. srcフォルダ内の `.env` に以下の環境変数を追加します。
 （STRIPE_KEYに公開可能キー、STRIPE_SECRETにシークレットキー）
 
 ```env
@@ -77,6 +77,15 @@ stripe-cli  | Your webhook signing secret is whsec_xxxxxxxxxxxxxxxxxxxxx (^C to 
 STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxx
 ```
 
+`.env` ファイルを更新した場合（例：StripeキーやDB情報などを変更した場合）は、
+設定キャッシュをクリアして再読み込みを行ってください。
+
+```bash
+docker compose exec php php artisan config:clear
+docker compose exec php php artisan cache:clear
+docker compose exec php php artisan config:cache
+```
+
 #### 4. Stripe CLI 設定ファイルの調整（任意）
 
 - CLIの設定ファイルは `~/.config/stripe/config.toml` にあります。
@@ -97,7 +106,7 @@ docker-compose restart stripe-cli
 
 ### 終了時
 
-作業が終わったら以下を実行してください。
+本アプリの利用を終了する際は以下を実行してください。
 ```bash
 make stop
 ```
