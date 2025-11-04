@@ -2,11 +2,21 @@
 DC ?= docker compose
 PHP = $(DC) exec php
 
+# DBヘルスチェック待ち
+.PHONY: wait-mysql
+wait-mysql:
+	@echo "==> ⏳ Waiting for MySQL (healthcheck)..."
+	@until [ "$$($(DC) ps -q mysql | xargs -r docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}starting{{end}}')" = "healthy" ]; do \
+		echo "   ... MySQL is starting"; sleep 2; \
+	done
+	@echo "==> ✅ MySQL is healthy"
+
 # ====== 初回構築 ======
 .PHONY: setup
 setup:
 	@echo "==> 🐳 Docker build & up"
 	$(DC) up -d --build
+	$(MAKE) wait-mysql
 	@echo "==> 📦 Laravel setup"
 	$(PHP) bash -c "composer install && \
 		cp -n .env.example .env && \
