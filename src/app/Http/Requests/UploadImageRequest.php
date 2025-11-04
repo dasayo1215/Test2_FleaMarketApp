@@ -31,8 +31,8 @@ class UploadImageRequest extends FormRequest
     public function messages() {
         return [
             'image.required' => '商品画像を選択してください',
-            'image.image' => '拡張子が.jpegもしくは.pngの商品画像を選択してください',
-            'image.mimes' => '拡張子が.jpegもしくは.pngの商品画像を選択してください',
+            'image.image' => '「.png」または「.jpeg」形式でアップロードしてください',
+            'image.mimes' => '「.png」または「.jpeg」形式でアップロードしてください',
         ];
     }
 }
