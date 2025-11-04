@@ -46,7 +46,6 @@ services:
 
     stripe-cli:
         image: stripe/stripe-cli
-        container_name: stripe-cli
         volumes:
             - ~/.config/stripe:/root/.config/stripe
         command: >
