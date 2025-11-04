@@ -24,19 +24,18 @@
         </aside>
 
         <!-- 評価モーダル -->
-        <div id="review-modal" class="modal" aria-hidden="true">
+        <div id="review-modal" class="modal">
             <div class="modal-backdrop" data-close="1"></div>
-            <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="review-title">
-                <div id="review-title" class="modal-title">取引が完了しました。</div>
+            <div class="modal-panel">
+                <div class="modal-title">取引が完了しました。</div>
                 <p class="modal-sub">今回の取引相手はどうでしたか？</p>
 
-                <div class="stars" id="star-group" aria-label="5段階評価">
-                    <!-- data-valueに1..5 -->
-                    <button type="button" class="star" data-value="1" aria-label="1星">★</button>
-                    <button type="button" class="star" data-value="2" aria-label="2星">★</button>
-                    <button type="button" class="star" data-value="3" aria-label="3星">★</button>
-                    <button type="button" class="star" data-value="4" aria-label="4星">★</button>
-                    <button type="button" class="star" data-value="5" aria-label="5星">★</button>
+                <div class="stars" id="star-group">
+                    <button type="button" class="star" data-value="1">★</button>
+                    <button type="button" class="star" data-value="2">★</button>
+                    <button type="button" class="star" data-value="3">★</button>
+                    <button type="button" class="star" data-value="4">★</button>
+                    <button type="button" class="star" data-value="5">★</button>
                 </div>
 
                 <div class="modal-actions">
@@ -50,14 +49,14 @@
             <!-- タイトル行 -->
             <div class="trade-user">
                 <img class="trade-user-image" src="{{ asset('storage/users/' . $partner->image_filename) }}"
-                    alt="{{ $partner->image_filename }}">
+                    alt="{{ $partner->name }} さんのプロフィール画像">
                 <h2 class="trade-user-text">「{{ $partner->name }}」さんとの取引画面</h2>
 
                 @if ($myRole === 'buyer')
                     @if (!empty($waitingForSellerReview) && $waitingForSellerReview)
                         <p class="trade-waiting-review">出品者評価待ち</p>
                     @else
-                        <button class="trade-finish">取引を完了する</button>
+                        <button class="trade-finish" type="button">取引を完了する</button>
                     @endif
                 @endif
             </div>
@@ -81,19 +80,17 @@
                 action="{{ route('trade.messages.store', ['roomId' => $roomId]) }}" method="post"
                 enctype="multipart/form-data">
                 @csrf
-                <!-- 追加：編集モード識別 -->
                 <input type="hidden" id="editing-message-id" name="editing_message_id" value="">
 
                 <div class="composer">
                     <p class="composer-error" id="trade-message-error"></p>
                     <div class="composer-wrapper">
                         <input id="trade-message-input" name="message" class="composer-input" type="text"
-                            placeholder="取引メッセージを記入してください">
+                            placeholder="取引メッセージを記入してください" autocomplete="off">
                         <input id="trade-image-input" name="image" type="file" style="display:none">
                         <button type="button" class="composer-image" id="composer-image-btn">画像を追加</button>
 
-                        <!-- 送信ボタンの文言をJSで切替（送信/更新） -->
-                        <button type="submit" class="composer-send" aria-label="送信" id="composer-send-btn">
+                        <button type="submit" class="composer-send" id="composer-send-btn" aria-label="送信">
                             <img src="{{ asset('storage/assets/send.jpg') }}" alt="送信" class="composer-send-img">
                         </button>
                     </div>

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TradeRoom;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use App\Models\TradeRoom;
 use App\Models\Review;
 
 class TradeRoomController extends Controller

@@ -6,13 +6,14 @@
     margin: 0 auto;
 }
 
-/* サイドバー（全面グレー帯） */
+/* サイドバー */
 .trade-sidebar {
     background: #868686;
     color: #fff;
     padding: 24px 16px;
-    min-height: calc(100vh - 50px);
+    min-height: calc(100dvh - 50px);
 }
+
 .trade-sidebar-title {
     text-align: center;
     font-weight: 700;
@@ -20,6 +21,7 @@
     font-size: 18px;
     letter-spacing: 0.05em;
 }
+
 .trade-sidebar-list {
     list-style: none;
     margin: 0;
@@ -29,30 +31,16 @@
 }
 
 .trade-sidebar-btn {
-    display: block;               /* インライン要素→ブロック化 */
-    width: 100%;                  /* サイドバー内いっぱいに */
-    height: 36px;                 /* 高さ固定 */
-    line-height: 36px;            /* 縦方向の中央揃え */
+    display: block;
+    width: 100%;
+    height: 36px;
+    line-height: 36px;
     background: #d9d9d9;
     color: #000;
     border-radius: 6px;
-    text-align: center;           /* 文字を中央寄せ */
-    text-decoration: none;        /* アンダーライン除去 */
+    text-align: center;
+    text-decoration: none;
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.1s ease;
-}
-
-/* hoverで軽いフィードバック */
-.trade-sidebar-btn:hover {
-    background: #cfcfcf;
-    transform: translateY(-1px);
-}
-
-/* 選択中（is-active）の見た目 */
-.trade-sidebar-btn.is-active {
-    background: #bfbfbf;
-    font-weight: 700;
-    outline: 2px solid #333;
 }
 
 .trade-sidebar-empty {
@@ -64,7 +52,7 @@
 .trade-main {
     display: grid;
     grid-template-rows: auto auto 1fr auto;
-    height: calc(100vh - 50px);
+    height: calc(100dvh - 50px);
     overflow: hidden;
 }
 
@@ -77,17 +65,20 @@
     padding: 25px 25px 25px;
     border-bottom: 2px solid #868686;
 }
+
 .trade-user-image {
     width: 56px;
     height: 56px;
     border-radius: 50%;
     background: #d9d9d9;
 }
+
 .trade-user-text {
     font-size: 26px;
     font-weight: 800;
     margin: 0;
 }
+
 .trade-finish {
     background: #ff8282;
     color: #fff;
@@ -115,19 +106,18 @@
     padding: 25px 25px 25px;
     border-bottom: 2px solid #868686;
 }
+
 .trade-item-img {
     width: 160px;
     height: 160px;
-    background: #d9d9d9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
+
 .trade-item-name {
     font-size: 30px;
     font-weight: 900;
     margin: 16px 0 16px;
 }
+
 .trade-item-price {
     font-size: 25px;
     font-weight: 700;
@@ -209,7 +199,6 @@
 }
 
 .msg-ops {
-    margin-top: 0px;
     display: flex;
     gap: 20px;
 }
@@ -222,12 +211,6 @@
     font-weight: 500;
     cursor: pointer;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-    transition: transform 0.2s, opacity 0.2s;
-}
-
-.msg-op-btn:hover {
-    transform: translateY(-1px);
-    opacity: 0.8;
 }
 
 /* 入力欄 */
@@ -257,6 +240,7 @@
     padding: 0 12px;
     font: inherit;
 }
+
 .composer-image {
     font-size: 15px;
     border: 2px solid #ff5555;
@@ -270,7 +254,6 @@
 .composer-image.is-locked {
     cursor: not-allowed;
     opacity: 0.6;
-    box-shadow: none;
 }
 
 .composer-send {
@@ -288,15 +271,24 @@
     object-fit: contain;
 }
 
-/* --- review modal --- */
+/* --- 評価モーダル --- */
 .modal {
     position: fixed;
     inset: 0;
     display: none;
     z-index: 1;
 }
-.modal.is-open { display: block; }
-.modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.4); }
+
+.modal.is-open {
+    display: block;
+}
+
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.4);
+}
+
 .modal-panel {
     position: relative;
     width: min(500px, 80vw);
