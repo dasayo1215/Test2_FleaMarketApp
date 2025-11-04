@@ -89,7 +89,7 @@ docker compose exec php php artisan config:cache
 #### 4. Stripe CLI 設定ファイルの調整（任意）
 
 - CLIの設定ファイルは `~/.config/stripe/config.toml` にあります。
-- `test_mode_api_key` は `.env` の `STRIPE_SECRET` と同じ値にしてください。
+- .env の STRIPE_SECRET と ~/.config/stripe/config.toml の test_mode_api_key は一致させてください（API呼び出し用）。
 - 編集できない場合は、権限を確認し、必要に応じて以下のコマンドで権限を付与してください。
 ```bash
 sudo chmod u+w ~/.config/stripe/config.toml
