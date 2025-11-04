@@ -103,9 +103,6 @@ class UserController extends Controller
         return $buyer->union($seller);
     }
 
-    /**
-     * アクティブなルームの buyer/seller をスコープで一発取得 → 仕分け
-     */
     private function activeRoomIds(int $userId): array
     {
         $rooms = TradeRoom::query()
