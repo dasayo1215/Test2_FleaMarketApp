@@ -99,9 +99,9 @@ nano ~/.config/stripe/config.toml
 ```bash
 docker-compose restart stripe-cli
 ```
+- Stripe CLIを再起動（`docker-compose restart stripe-cli`）した場合、新しいWebhook署名キー（whsec_...）が発行されます。再度③の `docker-compose logs stripe-cli` で確認し、`.env` の `STRIPE_WEBHOOK_SECRET` を更新してください。
 
 #### 注意：Webhook署名エラーについて
-- `.env` の `STRIPE_SECRET` と`config.toml`の`test_mode_api_key`は必ず一致させてください。
 - 本番環境の Webhook も受信するため、`whsec` が異なることによる署名検証エラーが Stripe ダッシュボード上やログに表示される場合がありますが、無視して構いません。
 
 ### 終了時
