@@ -28,7 +28,7 @@ class UserController extends Controller
     public function showPurchasedItems()
     {
         $user = Auth::user();
-        $items = Item::whereHas('purchase', fn($q) => $q->where('buyer_id',$user->id)->whereNotNull('completed_at'))
+        $items = Item::whereHas('purchase', fn($q) => $q->where('buyer_id', $user->id)->whereNotNull('completed_at'))
             ->with('purchase')->get()
             ->sortByDesc(fn($it) => $it->purchase->completed_at)->values();
 
@@ -38,7 +38,7 @@ class UserController extends Controller
     public function showListedItems()
     {
         $user = Auth::user();
-        $items = Item::where('seller_id',$user->id)->with('purchase')->latest()->get();
+        $items = Item::where('seller_id', $user->id)->with('purchase')->latest()->get();
 
         return $this->render($items, $user);
     }
@@ -46,25 +46,24 @@ class UserController extends Controller
     public function showTradingItems()
     {
         $user = Auth::user();
-        [$buyerRoomIds,$sellerRoomIds] = $this->activeRoomIds($user->id);
-        $activeRoomIds = array_values(array_unique(array_merge($buyerRoomIds,$sellerRoomIds)));
 
-        $items = Item::where(fn($q) => $q->where('seller_id',$user->id)
-            ->orWhereHas('purchase', fn($qq)=>$qq->where('buyer_id',$user->id)))
-            ->whereHas('purchase', fn($q)=>$q->whereNotNull('paid_at'))
-            ->has('purchase.reviews','<',2)
-            ->with(['purchase:id,buyer_id,item_id,paid_at','purchase.tradeRoom:id,purchase_id'])
+        $rooms = TradeRoom::query()
+            ->involvingUser($user->id)
+            ->active()
+            ->with([
+                'purchase:id,buyer_id,item_id,paid_at',
+                'purchase.item:id,name,price,seller_id,image_filename',
+            ])
+            ->withMax('messages as last_msg_at', 'created_at')
             ->get();
 
-        $lastMessageAt = empty($activeRoomIds) ? collect() :
-            DB::table('trade_messages')->select('trade_room_id',DB::raw('MAX(created_at) as lm'))
-                ->whereIn('trade_room_id',$activeRoomIds)->groupBy('trade_room_id')
-                ->pluck('lm','trade_room_id');
+        // メッセージ無しは最古扱いでソート
+        $rooms = $rooms->sortByDesc(fn($r) => $r->last_msg_at ?? '1970-01-01 00:00:00')->values();
 
-        $items = $items->sortByDesc(function($it) use($lastMessageAt){
-            $roomId = optional(optional($it->purchase)->tradeRoom)->id;
-            return $lastMessageAt[$roomId] ?? '1970-01-01 00:00:00';
-        })->values();
+        $items = $rooms
+            ->map(fn($r) => optional($r->purchase)->item)
+            ->filter()
+            ->values();
 
         return $this->render($items, $user);
     }
@@ -73,58 +72,56 @@ class UserController extends Controller
     {
         $unreadByRoom = $this->buildUnreadMap($user->id);
         $totalUnread  = $unreadByRoom->sum();
-        ['ratingAvgRounded'=>$ratingAvgRounded,'ratingCount'=>$ratingCount] = $this->aggregateRating($user->id);
+        ['ratingAvgRounded' => $ratingAvgRounded, 'ratingCount' => $ratingCount] = $this->aggregateRating($user->id);
 
-        return response()->view('users.show', compact('items','user','unreadByRoom','totalUnread','ratingAvgRounded','ratingCount'));
+        return response()->view('users.show', compact('items', 'user', 'unreadByRoom', 'totalUnread', 'ratingAvgRounded', 'ratingCount'));
     }
 
     private function buildUnreadMap(int $userId)
     {
-        [$buyerRoomIds,$sellerRoomIds] = $this->activeRoomIds($userId);
+        [$buyerRoomIds, $sellerRoomIds] = $this->activeRoomIds($userId);
         if (empty($buyerRoomIds) && empty($sellerRoomIds)) return collect();
 
         $buyer = collect();
         if (!empty($buyerRoomIds)) {
-            $buyer = DB::table('trade_messages as m')->join('trade_rooms as r','r.id','=','m.trade_room_id')
-                ->whereIn('m.trade_room_id',$buyerRoomIds)->where('m.sender_id','!=',$userId)
+            $buyer = DB::table('trade_messages as m')->join('trade_rooms as r', 'r.id', '=', 'm.trade_room_id')
+                ->whereIn('m.trade_room_id', $buyerRoomIds)->where('m.sender_id', '!=', $userId)
                 ->whereRaw("m.created_at > COALESCE(r.buyer_last_read_at,'1970-01-01 00:00:00')")
-                ->select('m.trade_room_id',DB::raw('COUNT(*) as cnt'))
-                ->groupBy('m.trade_room_id')->pluck('cnt','m.trade_room_id');
+                ->select('m.trade_room_id', DB::raw('COUNT(*) as cnt'))
+                ->groupBy('m.trade_room_id')->pluck('cnt', 'm.trade_room_id');
         }
 
         $seller = collect();
         if (!empty($sellerRoomIds)) {
-            $seller = DB::table('trade_messages as m')->join('trade_rooms as r','r.id','=','m.trade_room_id')
-                ->whereIn('m.trade_room_id',$sellerRoomIds)->where('m.sender_id','!=',$userId)
+            $seller = DB::table('trade_messages as m')->join('trade_rooms as r', 'r.id', '=', 'm.trade_room_id')
+                ->whereIn('m.trade_room_id', $sellerRoomIds)->where('m.sender_id', '!=', $userId)
                 ->whereRaw("m.created_at > COALESCE(r.seller_last_read_at,'1970-01-01 00:00:00')")
-                ->select('m.trade_room_id',DB::raw('COUNT(*) as cnt'))
-                ->groupBy('m.trade_room_id')->pluck('cnt','m.trade_room_id');
+                ->select('m.trade_room_id', DB::raw('COUNT(*) as cnt'))
+                ->groupBy('m.trade_room_id')->pluck('cnt', 'm.trade_room_id');
         }
 
         return $buyer->union($seller);
     }
 
+    /**
+     * アクティブなルームの buyer/seller をスコープで一発取得 → 仕分け
+     */
     private function activeRoomIds(int $userId): array
     {
-        $allActiveIds = TradeRoom::query()
+        $rooms = TradeRoom::query()
             ->involvingUser($userId)
             ->active()
-            ->pluck('id')
-            ->all();
-
-        $rooms = TradeRoom::with([
+            ->with([
                 'purchase:id,buyer_id,item_id',
-                'purchase.item:id,seller_id'
+                'purchase.item:id,seller_id',
             ])
-            ->whereIn('id', $allActiveIds)
-            ->get(['id','purchase_id']);
+            ->get(['id', 'purchase_id']);
 
-        $buyerRoomIds  = [];
-        $sellerRoomIds = [];
-        foreach ($rooms as $r) {
-            if ($r->purchase->buyer_id === $userId)            $buyerRoomIds[]  = $r->id;
-            if ($r->purchase->item->seller_id === $userId)     $sellerRoomIds[] = $r->id;
-        }
+        $buyerRoomIds  = $rooms->filter(fn($r) => $r->purchase && $r->purchase->buyer_id === $userId)
+            ->pluck('id')->all();
+
+        $sellerRoomIds = $rooms->filter(fn($r) => $r->purchase && $r->purchase->item && $r->purchase->item->seller_id === $userId)
+            ->pluck('id')->all();
 
         return [$buyerRoomIds, $sellerRoomIds];
     }
@@ -143,9 +140,9 @@ class UserController extends Controller
         $path = $request->input('profile_uploaded_image_path');
 
         if ($path) {
-            if ($user->image_filename) Storage::disk('public')->delete('users/'.$user->image_filename);
-            $filename = $user->id.'_'.time().'.'.pathinfo($path, PATHINFO_EXTENSION);
-            Storage::disk('public')->move($path,'users/'.$filename);
+            if ($user->image_filename) Storage::disk('public')->delete('users/' . $user->image_filename);
+            $filename = $user->id . '_' . time() . '.' . pathinfo($path, PATHINFO_EXTENSION);
+            Storage::disk('public')->move($path, 'users/' . $filename);
             $data['image_filename'] = $filename;
         }
 
@@ -156,18 +153,18 @@ class UserController extends Controller
 
     public function uploadProfileImage(ProfileRequest $request)
     {
-        $path = $request->file('image')->store('tmp','public');
+        $path = $request->file('image')->store('tmp', 'public');
 
-        return response()->json(['success'=>true,'image_url'=>asset('storage/'.$path),'path'=>$path]);
+        return response()->json(['success' => true, 'image_url' => asset('storage/' . $path), 'path' => $path]);
     }
 
     private function aggregateRating(int $userId): array
     {
-        $count = Review::where('ratee_id',$userId)->count();
-        if ($count===0) return ['ratingAvgRounded'=>null,'ratingCount'=>0];
-        $rounded = (int) round(Review::where('ratee_id',$userId)->avg('score'));
-        $rounded = max(1,min(5,$rounded));
+        $count = Review::where('ratee_id', $userId)->count();
+        if ($count === 0) return ['ratingAvgRounded' => null, 'ratingCount' => 0];
+        $rounded = (int) round(Review::where('ratee_id', $userId)->avg('score'));
+        $rounded = max(1, min(5, $rounded));
 
-        return ['ratingAvgRounded'=>$rounded,'ratingCount'=>$count];
+        return ['ratingAvgRounded' => $rounded, 'ratingCount' => $count];
     }
 }
