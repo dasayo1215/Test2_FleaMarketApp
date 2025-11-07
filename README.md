@@ -2,7 +2,7 @@ README
 
 # アプリケーション名
 
-coachtechフリマ
+フリマアプリ（coachtech課題）
 
 ## 使用技術(実行環境)
 
@@ -230,27 +230,6 @@ MAIL_ENCRYPTION=null
 <img width="1251" height="991" alt="Case1 drawio" src="https://github.com/user-attachments/assets/d1319593-a8a2-4056-b857-b0b5bafa54d6" />
 
 ## 画面例
-### マイページ（出品した商品タブ）
-<img width="1126" height="647" alt="スクリーンショット 2025-11-02 183527" src="https://github.com/user-attachments/assets/bec23dcc-c363-4b65-a5ff-64328fbb20b5" />
-
-### マイページ（取引中の商品タブ）
-<img width="1125" height="647" alt="スクリーンショット 2025-11-02 183553" src="https://github.com/user-attachments/assets/12b65649-60ff-4ec0-80b8-3f7dc96dd64b" />
-
-### 取引チャット画面（購入者、過去のメッセージ編集中の例）
-<img width="1126" height="650" alt="スクリーンショット 2025-11-02 182859" src="https://github.com/user-attachments/assets/1bbc5ba2-f627-4d61-ae43-c8aad8c70f14" />
-
-### 取引チャット画面（出品者）
-<img width="1126" height="649" alt="スクリーンショット 2025-11-02 182639" src="https://github.com/user-attachments/assets/16329887-992f-490e-82dd-ee6033caa854" />
-
-### 取引チャット画面（購入者、取引完了・評価画面）
-<img width="1127" height="651" alt="スクリーンショット 2025-11-02 182937" src="https://github.com/user-attachments/assets/db1c9286-0ebc-4e18-85ea-292679e54f73" />
-
-### 取引チャット画面（出品者、取引完了・評価画面）
-<img width="1125" height="650" alt="スクリーンショット 2025-11-02 183202" src="https://github.com/user-attachments/assets/4a821777-d776-4d95-b3f5-88b3178476d7" />
-
-### 購入者が取引を完了した際の、出品者宛通知メール
-<img width="956" height="494" alt="スクリーンショット 2025-11-02 183054" src="https://github.com/user-attachments/assets/dfa60fb3-f66c-45ec-9905-e3c02abb64a3" />
-
 ### 商品一覧画面
 ![01_商品一覧画面](https://github.com/user-attachments/assets/2500ce1c-3ff4-4f92-bbe5-fd9012bc8619)
 
@@ -280,6 +259,27 @@ MAIL_ENCRYPTION=null
 
 ### Stripe決済成功確認画面
 ![10_Stripe決済成功確認画面](https://github.com/user-attachments/assets/148e0895-2bfa-4a83-a919-25be465b5264)
+
+### マイページ（出品した商品タブ）
+<img width="1126" height="647" alt="スクリーンショット 2025-11-02 183527" src="https://github.com/user-attachments/assets/bec23dcc-c363-4b65-a5ff-64328fbb20b5" />
+
+### マイページ（取引中の商品タブ）
+<img width="1125" height="647" alt="スクリーンショット 2025-11-02 183553" src="https://github.com/user-attachments/assets/12b65649-60ff-4ec0-80b8-3f7dc96dd64b" />
+
+### 取引チャット画面（購入者、過去のメッセージ編集中の例）
+<img width="1126" height="650" alt="スクリーンショット 2025-11-02 182859" src="https://github.com/user-attachments/assets/1bbc5ba2-f627-4d61-ae43-c8aad8c70f14" />
+
+### 取引チャット画面（出品者）
+<img width="1126" height="649" alt="スクリーンショット 2025-11-02 182639" src="https://github.com/user-attachments/assets/16329887-992f-490e-82dd-ee6033caa854" />
+
+### 取引チャット画面（購入者、取引完了・評価画面）
+<img width="1127" height="651" alt="スクリーンショット 2025-11-02 182937" src="https://github.com/user-attachments/assets/db1c9286-0ebc-4e18-85ea-292679e54f73" />
+
+### 取引チャット画面（出品者、取引完了・評価画面）
+<img width="1125" height="650" alt="スクリーンショット 2025-11-02 183202" src="https://github.com/user-attachments/assets/4a821777-d776-4d95-b3f5-88b3178476d7" />
+
+### 購入者が取引を完了した際の、出品者宛通知メール
+<img width="956" height="494" alt="スクリーンショット 2025-11-02 183054" src="https://github.com/user-attachments/assets/dfa60fb3-f66c-45ec-9905-e3c02abb64a3" />
 
 ### レスポンス確認の例（タブレット 768px）
 ![11_レスポンス確認の例（タブレット 768px）](https://github.com/user-attachments/assets/56c97efb-c11e-48f0-bdfb-bb69d5bfc0b9)
