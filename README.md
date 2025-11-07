@@ -245,9 +245,6 @@ MAIL_ENCRYPTION=null
 ### 商品出品画面
 ![05_商品出品画面](https://github.com/user-attachments/assets/de6447f7-04a0-464e-8d99-c1e99caa6ad3)
 
-### プロフィール画面（出品した商品）
-![06_プロフィール画面（出品した商品）](https://github.com/user-attachments/assets/0972e93d-6c90-4f54-b587-cc80e4c9cd09)
-
 ### 商品詳細画面
 ![07_商品詳細画面](https://github.com/user-attachments/assets/07428981-2299-49cb-9530-21453d3ce02f)
 
