@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="content-wrapper">
-        <h2 class="content-heading">会員登録</h2>
+        <h2 class="content-heading">会員登録B</h2>
         <form class="content-form-wrapper" action="{{ route('register') }}" method="post">
             @csrf
             <label class="content-form-label" for="name">ユーザー名</label>
