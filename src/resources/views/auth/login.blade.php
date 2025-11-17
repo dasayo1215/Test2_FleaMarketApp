@@ -5,7 +5,7 @@
         <h2 class="content-heading">ログイン</h2>
         <form class="content-form-wrapper" action="/login" method="post">
             @csrf
-            <label class="content-form-label" for="email">メールアドレス</label>
+            <label class="content-form-label" for="email">メールアドレスA</label>
             <input class="content-form-input form-control" type="text" name="email" id="email"  value="{{ old('email') }}">
             <p class="form-error">
                 @error('email')
