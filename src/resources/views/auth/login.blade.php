@@ -12,7 +12,7 @@
                     {{ $message }}
                 @enderror
             </p>
-            <label class="content-form-label" for="password">パスワード</label>
+            <label class="content-form-label" for="password">パスワードA</label>
             <input class="content-form-input" type="password" name="password" id="password">
             <p class="form-error">
                 @error('password')
