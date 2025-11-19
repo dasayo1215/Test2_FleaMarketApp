@@ -5,14 +5,14 @@
         <h2 class="content-heading">ログイン</h2>
         <form class="content-form-wrapper" action="/login" method="post">
             @csrf
-            <label class="content-form-label" for="email">メールアドレスB</label>
+            <label class="content-form-label" for="email">メールアドレス</label>
             <input class="content-form-input form-control" type="text" name="email" id="email"  value="{{ old('email') }}">
             <p class="form-error">
                 @error('email')
                     {{ $message }}
                 @enderror
             </p>
-            <label class="content-form-label" for="password">パスワード</label>
+            <label class="content-form-label" for="password">パスワードA</label>
             <input class="content-form-input" type="password" name="password" id="password">
             <p class="form-error">
                 @error('password')
